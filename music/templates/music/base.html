@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Mahimusic{% endblock %}</title>
+    {% load staticfiles %}
+    <link rel="shortcut icon" type="image/png" href="{%  static 'favicon.ico' %}"/>
+    <link rel="stylesheet" href="{% static 'music/bootstrap.css' %}">
+    <link href="{% static 'music/fonts.css' %}" rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="{% static 'music/style.css' %}"/>
+    <script src="{% static 'music/js/jquery.js'%}"></script>
+    <script src="{% static 'music/js/bootstrap.js' %}"></script>
+    <script src="{% static 'music/js/main.js' %}"></script>
+</head>
+
+<body>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+
+        <!-- Header -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topNavBar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{% url 'music:index' %}">Mahimusic</a>
+        </div>
+
+        <!-- Items -->
+        <div class="collapse navbar-collapse" id="topNavBar">
+            <ul class="nav navbar-nav">
+                <li class="{% block albums_active %}{% endblock %}"><a href="{% url 'music:index' %}"><span class="glyphicon glyphicon-cd" aria-hidden="true"></span>&nbsp; Albums</a></li>
+                <li class="{% block songs_active %}{% endblock %}"><a href="{% url 'music:songs' 'all' %}"><span class="glyphicon glyphicon-music" aria-hidden="true"></span>&nbsp; Songs</a></li>
+                <li>
+                    <button onclick="playall()" >
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;play all
+                    </button>
+                </li>
+            </ul>
+            <form class="navbar-form navbar-left" role="search" method="get" action="{% url 'music:index' %}">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="q" value="{{ request.GET.q }}">
+                </div>
+                <button type="submit" class="btn btn-default">Search</button>
+            </form>
+                
+
+            <ul class="nav navbar-nav navbar-right">
+                
+                <li>
+                    <a href="{% url 'music:create_song' %}">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp; Add Song
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'music:logout_user' %}">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp; Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+</nav>
+{% block body %}
+{% endblock %}
+<audio controls id = "audio"> <!-- One or more source files, each referencing the same audio but in a different file format. The browser will choose the first file which it is able to play. -->  You will see this text if native audio playback is not supported. <!-- You could use this fall-back feature to insert a JavaScript-based audio player. --> </audio> 
+<script type="text/javascript">
+    /**
+    stores url of all songs in list and plays one by one
+    */
+    var list = {{l|safe}}
+    var current = 0;
+    var audio = document.getElementById('audio');
+    var next  = current +1;    
+    function play(item){
+        audio.pause();
+        audio.src = list[item]
+        audio.load();
+        audio.play(); 
+    }
+    function playnext(item){
+        next = item+1;
+        if(next <= list.length-1)
+            current = next;
+        else
+            current = 0;
+        play(current)
+    }
+    function playall(){  
+        current = 0;
+        play(current)
+
+        audio.addEventListener('ended',function(){
+            playnext(current)
+        });
+    }
+    function playthis(url) {
+        audio.pause();
+        audio.src = url;
+        audio.load();
+        audio.play();
+    }
+    window.addEventListener("keydown", handle, true);
+    function handle(e) {
+        var keyCode = e.keyCode;
+        if(keyCode==78) {
+            playnext(current)
+        }
+        
+}
+</script>
+</body>
+</html>
