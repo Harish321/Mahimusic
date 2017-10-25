@@ -51,13 +51,14 @@ def create_song(request):
             ''' IF the uploaded file contains any title in its tag then it takes that else it takes the uploaded file name''' 
             file_name = ''
             try:
-                file_name = file.tags['TIT2']
+                file_name = str(file.tags['TIT2']).replace(':',"")
             except:
                 file_name = a.name
 
             '''IF there isn't any data about album in the mp3 it sets it to unknown'''
             file_album_name=''
             if 'TALB' in file:
+                
                 file_album_name=file.tags['TALB']
             else:
                 file_album_name='Unknown'
@@ -84,9 +85,9 @@ def create_song(request):
                 if 'APIC:' in file:
                     artwork = file.tags['APIC:'].data
                     filename='media/'+str(request.user.pk)+'/'+str(file_album_name)+'/'+str(file_album_name)+'.jpg'
-                    with open(filename, 'w+') as img:
+                    with open(filename, 'wb+') as img:
                         img.write(artwork) # write artwork to new image
-                
+                        
                     statinfo = os.stat(filename)#gives details of the image
                     if statinfo.st_size==0:
                         '''If there is no image then we use default'''
