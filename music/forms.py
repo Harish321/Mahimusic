@@ -12,7 +12,7 @@ class AlbumForm(forms.ModelForm):
 
 
 class SongForm(forms.Form):
-    audio_file = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
+    audio_file = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple':True, 'onchange': 'this.form.submit();'}))
 
 
 class UserForm(forms.ModelForm):
