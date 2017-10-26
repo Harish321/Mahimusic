@@ -50,9 +50,16 @@ def create_song(request):
             
             ''' IF the uploaded file contains any title in its tag then it takes that else it takes the uploaded file name''' 
             file_name = ''
-            try:
-                file_name = str(file.tags['TIT2']).replace(':',"")
-            except:
+            if 'TIT2' in file:
+                if os.name =='nt':
+                    file_name= str(file.tags['TIT2']).replace(":","")
+                    file_name= str(file.tags['TIT2']).replace(">","")
+                    file_name= str(file.tags['TIT2']).replace("<","")
+                    file_name= str(file.tags['TIT2']).replace("/","")
+                    file_name= str(file.tags['TIT2']).replace("-","")
+                else:
+                    file_name = file.tags['TIT2']
+            else:
                 file_name = a.name
 
             '''IF there isn't any data about album in the mp3 it sets it to unknown'''
