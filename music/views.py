@@ -53,10 +53,10 @@ def create_song(request):
             if 'TIT2' in file:
                 if os.name =='nt':
                     file_name= str(file.tags['TIT2']).replace(":","")
-                    file_name= str(file.tags['TIT2']).replace(">","")
-                    file_name= str(file.tags['TIT2']).replace("<","")
-                    file_name= str(file.tags['TIT2']).replace("/","")
-                    file_name= str(file.tags['TIT2']).replace("-","")
+                    file_name= file_name.replace(">","")
+                    file_name= file_name.replace("<","")
+                    file_name= file_name.replace("/","")
+                    file_name= file_name.replace("-","")
                 else:
                     file_name = file.tags['TIT2']
             else:
