@@ -1,0 +1,6 @@
+{%extends 'music/base.html'%}
+{%block body%}
+	{% for song in playlist.playlist_songs.all %}
+		{{ song.song_title }}
+	{%endfor%}
+{%endblock%}

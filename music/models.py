@@ -30,3 +30,11 @@ class Song(models.Model):
     def __str__(self):
         return self.song_title
 
+'''
+    This models is for playlists and stores songs
+'''
+class Playlist(models.Model):
+    user = models.ForeignKey(User,default = 1)
+    playlist_title  = models.CharField(max_length=10)
+    playlist_songs = models.ManyToManyField(Song)
+

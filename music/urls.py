@@ -16,4 +16,9 @@ urlpatterns = [
     url(r'^(?P<album_id>[0-9]+)/delete_song/(?P<song_id>[0-9]+)/$', views.delete_song, name='delete_song'),
     url(r'^(?P<album_id>[0-9]+)/favorite_album/$', views.favorite_album, name='favorite_album'),
     url(r'^(?P<album_id>[0-9]+)/delete_album/$', views.delete_album, name='delete_album'),
+    url(r'^create_playlist/$',views.create_playlist, name = 'create_playlist'),
+    url(r'^playlists/$',views.playlists,name = 'playlists'),
+    url(r'^playlist/(?P<playlist_id>[0-9]+)/$',views.playlist,name='playlist'),
+    url(r'^addsongtoplaylist/(?P<song_id>[0-9]+)/(?P<playlist_id>[0-9]+)',views.add_song_to_playlist,name='addsongtoplaylist'),
+    url(r'^addalbumtoplaylist/(?P<album_id>[0-9]+)/(?P<playlist_id>[0-9]+)',views.add_album_to_playlist,name='addalbumtoplaylist'),
 ]

@@ -3,8 +3,8 @@ from django.contrib.auth import logout
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404,redirect
 from django.db.models import Q
-from .forms import AlbumForm, SongForm, UserForm
-from .models import Album, Song
+from .forms import AlbumForm, SongForm, UserForm , PlaylistForm
+from .models import Album, Song, Playlist
 from django.http import HttpResponseRedirect
 import os, sys
 import shutil
@@ -327,3 +327,45 @@ def if_no_songs_delete_folder(usrid,albtitle,albm):
 def remove_song(usrid,albtitle,sngtitle):
     os.remove('media/'+str(usrid)+'/'+str(albtitle)+'/'+str(sngtitle)+'.mp3')
     return
+
+def create_playlist(request):
+    form = PlaylistForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            title = form.cleaned_data['playlist_title']
+            newPlaylist = Playlist(  playlist_title = title)
+            newPlaylist.user = request.user
+            newPlaylist.save()
+            s = Song.objects.filter(user=request.user)
+            newPlaylist.playlist_songs.add(s[0])
+            print newPlaylist.playlist_songs.all()
+            return HttpResponseRedirect('/')
+    context = {'form':form}
+    return render(request, 'music/createPlaylist.html', context)
+
+def playlists(request):
+    user_playlists=Playlist.objects.filter(user = request.user)
+    context = {
+        'user_playlists':user_playlists
+    }
+    return render(request,'music/playlists.html',context)
+
+def playlist(request,playlist_id):
+    currentPlaylist = Playlist(id = playlist_id,user = request.user)
+    context = {
+        'playlist':currentPlaylist
+    }
+    return render(request,'music/playlist.html',context)
+
+def add_song_to_playlist(request,song_id,playlist_id):
+    currentPlaylist = Playlist(id=playlist_id,user=request.user)
+    currentSong = Song(id=song_id,user= request.user)
+    currentPlaylist.playlist_songs.add(currentSong)
+    return HttpResponseRedirect('/')
+
+def add_album_to_playlist(request,album_id,playlist_id):
+    songs = Song.objects.filter(id=album_id,user=request.user)
+    for song in songs:
+        add_song_to_playlist(request,song.id,playlist_id)
+    return HttpResponseRedirect('/')
+

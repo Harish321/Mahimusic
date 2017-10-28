@@ -1,0 +1,40 @@
+{%extends 'music/base.html'%}
+{%block body%}
+	{% for a in p %}
+		{{a.playlist_songs.all.0.song_title}}
+	{%endfor%}
+
+<div class="container-fluid songs-container">
+
+
+    <div class="row">
+
+        <div class="col-sm-12">
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Playlist title</th>
+                                <th>Open</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for playlist in user_playlists %}
+                                <tr>
+                                    <td>{{ playlist.playlist_title }}</td>
+                                    <td><a href="{% url 'music:playlist' playlist.id %}">{{ playlist.playlist_title }}</a></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
