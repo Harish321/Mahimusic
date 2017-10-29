@@ -1,0 +1,15 @@
+{% extends 'music/base.html' %}
+{%block body%}
+<form action="/addsongstoplaylist/{{playlist.id}}" method="post">
+{% csrf_token %}
+{% for song in songs %}
+	<input type="checkbox" name="songid[]" value="{{song.id}}" checked="checked"> {{song.song_title}}<br>
+{% endfor %}
+  
+  
+  <input type="submit" value="Submit">
+</form>
+
+
+{{playlist.playlist_title}}
+{% endblock %}

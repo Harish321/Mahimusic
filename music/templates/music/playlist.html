@@ -1,5 +1,6 @@
 {%extends 'music/base.html'%}
 {%block body%}
+	<a href="{% url 'music:addsongstoplaylist' playlist.id %}"> add </a>
 	{% for song in playlist.playlist_songs.all %}
 		{{ song.song_title }}
 	{%endfor%}

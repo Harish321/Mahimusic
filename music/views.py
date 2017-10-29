@@ -336,9 +336,6 @@ def create_playlist(request):
             newPlaylist = Playlist(  playlist_title = title)
             newPlaylist.user = request.user
             newPlaylist.save()
-            s = Song.objects.filter(user=request.user)
-            newPlaylist.playlist_songs.add(s[0])
-            print newPlaylist.playlist_songs.all()
             return HttpResponseRedirect('/')
     context = {'form':form}
     return render(request, 'music/createPlaylist.html', context)
@@ -361,11 +358,24 @@ def add_song_to_playlist(request,song_id,playlist_id):
     currentPlaylist = Playlist(id=playlist_id,user=request.user)
     currentSong = Song(id=song_id,user= request.user)
     currentPlaylist.playlist_songs.add(currentSong)
-    return HttpResponseRedirect('/')
 
 def add_album_to_playlist(request,album_id,playlist_id):
     songs = Song.objects.filter(id=album_id,user=request.user)
     for song in songs:
         add_song_to_playlist(request,song.id,playlist_id)
     return HttpResponseRedirect('/')
+
+def add_songs_to_playlist(request,playlist_id):
+    if request.method == "POST":
+        songs_id = request.POST.getlist('songid[]')
+        for song_id in songs_id:
+            add_song_to_playlist(request,song_id,playlist_id)
+        return HttpResponseRedirect('/')
+    songs = Song.objects.filter(user=request.user).exclude(playlist__id__exact=playlist_id)
+    playlist = Playlist.objects.filter(id = playlist_id)
+    context = {
+        'songs':songs,
+        'playlist' : playlist[0]
+    }
+    return render(request,'music/addsongstoplaylist.html',context)
 
