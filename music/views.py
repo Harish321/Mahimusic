@@ -8,8 +8,6 @@ from .models import Album, Song, Playlist
 from django.http import HttpResponseRedirect
 import os, sys
 import shutil
-from music.playlist import *
-
 AUDIO_FILE_TYPES = ['wav', 'mp3', 'ogg']
 IMAGE_FILE_TYPES = ['png', 'jpg', 'jpeg']
 from mutagen import *
@@ -329,4 +327,79 @@ def remove_song(usrid,albtitle,sngtitle):
     os.remove('media/'+str(usrid)+'/'+str(albtitle)+'/'+str(sngtitle)+'.mp3')
     return
 
+def create_playlist(request):
+    form = PlaylistForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            title = form.cleaned_data['playlist_title']
+            newPlaylist = Playlist(  playlist_title = title)
+            newPlaylist.user = request.user
+            newPlaylist.save()
+            return HttpResponseRedirect('/')
+    context = {'form':form}
+    return render(request, 'music/createPlaylist.html', context)
+
+def playlists(request):
+    user_playlists=Playlist.objects.filter(user = request.user)
+    context = {
+        'user_playlists':user_playlists
+    }
+    return render(request,'music/playlists.html',context)
+
+def playlist(request,playlist_id):
+    currentPlaylist = Playlist(id = playlist_id,user = request.user)
+    allsongs = currentPlaylist.playlist_songs.all()
+    l = givesongsurl(allsongs)
+    context = {
+        'playlist':currentPlaylist,
+        'l':l
+    }
+    return render(request,'music/playlist.html',context)
+
+def add_song_to_playlist(request,song_id,playlist_id):
+    currentPlaylist = Playlist(id=playlist_id,user=request.user)
+    currentSong = Song(id=song_id,user= request.user)
+    if currentSong not in currentPlaylist.playlist_songs.all():
+        currentPlaylist.playlist_songs.add(currentSong)
+
+def delete_song_from_playlist(request,playlist_id,song_id):
+    song = Song(id = song_id)
+    playlist = Playlist(id = playlist_id)
+    playlist.playlist_songs.remove(song)
+    return HttpResponseRedirect('/')
+
+def add_album_to_playlist(request,album_id,playlist_id):
+    songs = Song.objects.filter(album_id=album_id,user=request.user)
+    for song in songs:
+        print 1
+        add_song_to_playlist(request,song.id,playlist_id)
+
+def add_songs_to_playlist(request,playlist_id):
+    if request.method == "POST":
+        songs_id = request.POST.getlist('songid[]')
+        for song_id in songs_id:
+            add_song_to_playlist(request,song_id,playlist_id)
+        return HttpResponseRedirect('/')
+    songs = Song.objects.filter(user=request.user).exclude(playlist__id__exact=playlist_id)
+    playlist = Playlist(id = playlist_id)
+    context = {
+        'songs':songs,
+        'playlist' : playlist
+    }
+    return render(request,'music/addsongstoplaylist.html',context)
+
+def add_albums_to_playlist(request,playlist_id):
+    if request.method == "POST":
+        albums_id = request.POST.getlist('albumid[]')
+        for album_id in albums_id:
+            add_album_to_playlist(request,album_id,playlist_id)
+        return HttpResponseRedirect('/')
+    albums = Album.objects.filter(user = request.user)
+    playlist = Playlist(id = playlist_id)
+    context = {
+        'albums':albums,
+        'playlist':playlist
+    }
+    return render(request,'music/addalbumstoplaylist.html',context)
+    pass
 
