@@ -348,8 +348,17 @@ def create_playlist(request):
 
 def playlists(request):
     user_playlists=Playlist.objects.filter(user = request.user)
+    songs_in_playlist = []
+    for this in user_playlists:
+        songs = this.playlist_songs.all()
+        songs_in_playlist.append(givesongsurl(songs))
+    l=[]
+    zipped = zip(user_playlists,songs_in_playlist)
     context = {
-        'user_playlists':user_playlists
+        'user_playlists':user_playlists,
+        'songs_in_playlist':songs_in_playlist,
+        'l':l,
+        'zipped':zipped,
     }
     return render(request,'music/playlists.html',context)
 
@@ -380,11 +389,14 @@ def delete_song_from_playlist(request,playlist_id,song_id):
     playlist.playlist_songs.remove(song)
     return redirect('/music/playlist/'+playlist_id)
 
-def remove_allsongs_from_playlist(request,playlist_id):
+def remove_allsongs_from_playlist(request,playlist_id,typ):
+    currenturl = request.get_full_path()
     songs = Song.objects.filter(user=request.user,playlist__id= playlist_id)
     for song in songs:
         delete_song_from_playlist(request,playlist_id,song.id)
-    return redirect('/music/playlist/'+playlist_id)
+    if int(typ)==0:
+        return redirect('/music/playlist/'+playlist_id)
+    return redirect('/music/playlists')
 
 def add_album_to_playlist(request,album_id,playlist_id):
     songs = Song.objects.filter(album_id=album_id,user=request.user)

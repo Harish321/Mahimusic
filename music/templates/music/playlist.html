@@ -2,7 +2,7 @@
 {%block body%}
 	<a href="{% url 'music:addsongstoplaylist' playlist.id %}"> add songs </a>
 	<a href="{% url 'music:addalbumstoplaylist' playlist.id %}">add albums</a>
-	<a href="{% url 'music:removeallsongsfromplaylist' playlist.id %}">remove all songs</a>
+	<a href="{% url 'music:removeallsongsfromplaylist' playlist.id  0 %}">remove all songs</a>
 	{% for song in playlist.playlist_songs.all %}
 		<h1 onclick="playthis('{{song.audio_file.url}}')">{{ song.song_title }}</h1>
 		<a href="{% url 'music:deletesongfromplaylist' playlist.id song.id %}"><h3>delete</h3></a>	

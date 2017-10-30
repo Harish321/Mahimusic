@@ -105,6 +105,10 @@
         audio.load();
         audio.play();
     }
+    function playthislist(l){
+        list = l;
+        playall();
+    }
     window.addEventListener("keydown", handle, true);
     function handle(e) {
         var keyCode = e.keyCode;
