@@ -336,7 +336,7 @@ def create_playlist(request):
                 newPlaylist = Playlist(  playlist_title = title)
                 newPlaylist.user = request.user
                 newPlaylist.save()
-                return HttpResponseRedirect('/')
+                return redirect('/music/playlist/'+str(newPlaylist.id))
             else :
                 context = {
                     'form':form,
@@ -365,7 +365,7 @@ def playlist(request,playlist_id):
 
 def delete_playlist(request,playlist_id):
     Playlist(id = playlist_id).delete()
-    return HttpResponseRedirect('/')
+    return redirect('/music/playlists')
     
 
 def add_song_to_playlist(request,song_id,playlist_id):
@@ -378,18 +378,17 @@ def delete_song_from_playlist(request,playlist_id,song_id):
     song = Song(id = song_id)
     playlist = Playlist(id = playlist_id)
     playlist.playlist_songs.remove(song)
-    return HttpResponseRedirect('/')
+    return redirect('/music/playlist/'+playlist_id)
 
 def remove_allsongs_from_playlist(request,playlist_id):
     songs = Song.objects.filter(user=request.user,playlist__id= playlist_id)
     for song in songs:
         delete_song_from_playlist(request,playlist_id,song.id)
-    return HttpResponseRedirect('/')
+    return redirect('/music/playlist/'+playlist_id)
 
 def add_album_to_playlist(request,album_id,playlist_id):
     songs = Song.objects.filter(album_id=album_id,user=request.user)
     for song in songs:
-        print 1
         add_song_to_playlist(request,song.id,playlist_id)
 
 def add_songs_to_playlist(request,playlist_id):
@@ -397,7 +396,7 @@ def add_songs_to_playlist(request,playlist_id):
         songs_id = request.POST.getlist('songid[]')
         for song_id in songs_id:
             add_song_to_playlist(request,song_id,playlist_id)
-        return HttpResponseRedirect('/')
+        return redirect('/music/playlist/'+playlist_id)
     songs = Song.objects.filter(user=request.user).exclude(playlist__id__exact=playlist_id)
     playlist = Playlist(id = playlist_id)
     context = {
@@ -411,7 +410,7 @@ def add_albums_to_playlist(request,playlist_id):
         albums_id = request.POST.getlist('albumid[]')
         for album_id in albums_id:
             add_album_to_playlist(request,album_id,playlist_id)
-        return HttpResponseRedirect('/')
+        return redirect('/music/playlist/'+playlist_id)
     albums = Album.objects.filter(user = request.user)
     playlist = Playlist(id = playlist_id)
     context = {
@@ -419,6 +418,3 @@ def add_albums_to_playlist(request,playlist_id):
         'playlist':playlist
     }
     return render(request,'music/addalbumstoplaylist.html',context)
-    pass
-
-
