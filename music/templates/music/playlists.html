@@ -19,6 +19,7 @@
                                 <th>Playlist title</th>
                                 <th>Open</th>
                                 <th>Delete</th>
+                                <th>allsongs</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -27,6 +28,7 @@
                                     <td>{{ playlist.playlist_title }}</td>
                                     <td><a href="{% url 'music:playlist' playlist.id %}">open</a></td>
                                     <td><a href="{% url 'music:deleteplaylist' playlist.id%}">Delete</a></td>
+                                    <td><a href="{% url 'music:removeallsongsfromplaylist' playlist.id%}">remove all songs</a></td>
                                 </tr>
                             {% endfor %}
                         </tbody>

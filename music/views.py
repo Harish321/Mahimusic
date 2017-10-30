@@ -380,6 +380,12 @@ def delete_song_from_playlist(request,playlist_id,song_id):
     playlist.playlist_songs.remove(song)
     return HttpResponseRedirect('/')
 
+def remove_allsongs_from_playlist(request,playlist_id):
+    songs = Song.objects.filter(user=request.user,playlist__id= playlist_id)
+    for song in songs:
+        delete_song_from_playlist(request,playlist_id,song.id)
+    return HttpResponseRedirect('/')
+
 def add_album_to_playlist(request,album_id,playlist_id):
     songs = Song.objects.filter(album_id=album_id,user=request.user)
     for song in songs:
@@ -414,4 +420,5 @@ def add_albums_to_playlist(request,playlist_id):
     }
     return render(request,'music/addalbumstoplaylist.html',context)
     pass
+
 
