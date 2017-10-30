@@ -332,10 +332,17 @@ def create_playlist(request):
     if request.method == "POST":
         if form.is_valid():
             title = form.cleaned_data['playlist_title']
-            newPlaylist = Playlist(  playlist_title = title)
-            newPlaylist.user = request.user
-            newPlaylist.save()
-            return HttpResponseRedirect('/')
+            if len(Playlist.objects.filter(playlist_title = title , user = request.user))==0:
+                newPlaylist = Playlist(  playlist_title = title)
+                newPlaylist.user = request.user
+                newPlaylist.save()
+                return HttpResponseRedirect('/')
+            else :
+                context = {
+                    'form':form,
+                    'error':'playlist exists'
+                }
+                return render(request, 'music/createPlaylist.html', context)            
     context = {'form':form}
     return render(request, 'music/createPlaylist.html', context)
 
