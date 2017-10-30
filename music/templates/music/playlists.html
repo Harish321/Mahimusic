@@ -18,13 +18,15 @@
                             <tr>
                                 <th>Playlist title</th>
                                 <th>Open</th>
+                                <th>Delete</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for playlist in user_playlists %}
                                 <tr>
                                     <td>{{ playlist.playlist_title }}</td>
-                                    <td><a href="{% url 'music:playlist' playlist.id %}">{{ playlist.playlist_title }}</a></td>
+                                    <td><a href="{% url 'music:playlist' playlist.id %}">open</a></td>
+                                    <td><a href="{% url 'music:deleteplaylist' playlist.id%}">Delete</a></td>
                                 </tr>
                             {% endfor %}
                         </tbody>

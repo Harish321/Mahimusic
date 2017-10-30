@@ -23,5 +23,6 @@ urlpatterns = [
     url(r'^addalbumtoplaylist/(?P<album_id>[0-9]+)/(?P<playlist_id>[0-9]+)',views.add_album_to_playlist,name='addalbumtoplaylist'),
     url(r'^addsongstoplaylist/(?P<playlist_id>[0-9]+)',views.add_songs_to_playlist,name='addsongstoplaylist'),
     url(r'^deletesongfromplaylist/(?P<playlist_id>[0-9]+)/(?P<song_id>[0-9]+)',views.delete_song_from_playlist,name='deletesongfromplaylist'),
-    url(r'^addalbumstoplaylist/(?P<playlist_id>[0-9]+)',views.add_albums_to_playlist,name='addalbumstoplaylist')
+    url(r'^addalbumstoplaylist/(?P<playlist_id>[0-9]+)',views.add_albums_to_playlist,name='addalbumstoplaylist'),
+    url(r'^deleteplaylist/(?P<playlist_id>[0-9]+)',views.delete_playlist,name = 'deleteplaylist'),
 ]

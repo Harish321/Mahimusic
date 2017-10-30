@@ -356,6 +356,11 @@ def playlist(request,playlist_id):
     }
     return render(request,'music/playlist.html',context)
 
+def delete_playlist(request,playlist_id):
+    Playlist(id = playlist_id).delete()
+    return HttpResponseRedirect('/')
+    
+
 def add_song_to_playlist(request,song_id,playlist_id):
     currentPlaylist = Playlist(id=playlist_id,user=request.user)
     currentSong = Song(id=song_id,user= request.user)
