@@ -410,10 +410,12 @@ def add_songs_to_playlist(request,playlist_id):
             add_song_to_playlist(request,song_id,playlist_id)
         return redirect('/music/playlist/'+playlist_id)
     songs = Song.objects.filter(user=request.user).exclude(playlist__id__exact=playlist_id)
-    playlist = Playlist(id = playlist_id)
+    playlist = Playlist.objects.get(id = playlist_id)
+    l=[]
     context = {
         'songs':songs,
-        'playlist' : playlist
+        'playlist' : playlist,
+        'l':l
     }
     return render(request,'music/addsongstoplaylist.html',context)
 
@@ -424,7 +426,7 @@ def add_albums_to_playlist(request,playlist_id):
             add_album_to_playlist(request,album_id,playlist_id)
         return redirect('/music/playlist/'+playlist_id)
     albums = Album.objects.filter(user = request.user)
-    playlist = Playlist(id = playlist_id)
+    playlist = Playlist.objects.get(id = playlist_id)
     context = {
         'albums':albums,
         'playlist':playlist

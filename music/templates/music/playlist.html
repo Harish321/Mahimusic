@@ -1,47 +1,54 @@
 {%extends 'music/base.html'%}
+
 {%block body%}
-                <h1><center>Playlist : {{playlist.playlist_title }}</center></h1>
-
- <div class="row">
-        <div class="col-sm-12" >
-            <ul class="nav nav-pills" style="margin-bottom: 10px;">
-                <li role="presentation" class="active" ><a href="{% url 'music:addsongstoplaylist' playlist.id %}">Add songs</a></li>
-                <li role="presentation" class="active" ><a href="{% url 'music:addalbumstoplaylist' playlist.id %}">Add albums</a></li>
-                <li role="presentation" class="active" ><a href="{% url 'music:removeallsongsfromplaylist' playlist.id  0 %}">Remove all</a></li>
-                <li role="presentation" class="active" ><a href="{% url 'music:deleteplaylist' playlist.id   %}">Delete playlist</a></li>
-            </ul>
-        </div>
-
- </div>
-
- <div class="panel panel-default">
-                <div class="panel-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Song</th>
-                                <th>Album</th>
-                                <th>Play</th>
-                                <th>Delete</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for song in playlist.playlist_songs.all %}
-                                <tr>
-                                    <td>{{ song.song_title }}</td>
-                                    <td>{{ song.album.album_title}}</td>
-                                    <td><button type="button" class="btn btn-success btn-xs" onclick="playthis('{{ song.audio_file.url }}')">
-                                                <span class="glyphicon glyphicon-play"></span>&nbsp; Play
-                                            </button></td>
-                                    <td><a href="{% url 'music:deletesongfromplaylist' playlist.id song.id %}">delete</a></td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
+<h1><center>Playlist : {{playlist.playlist_title }}</center></h1>
+<div class="row">
+    <div class="col-sm-12" >
+        <ul class="nav nav-pills" style="margin-bottom: 10px;">
+            <li role="presentation" class="active" ><a href="{% url 'music:addsongstoplaylist' playlist.id %}">Add songs</a></li>
+            <li role="presentation" class="active" ><a href="{% url 'music:addalbumstoplaylist' playlist.id %}">Add albums</a></li>
+            <li role="presentation" class="active" ><a href="{% url 'music:removeallsongsfromplaylist' playlist.id  0 %}">Remove all</a></li>
+            <li role="presentation" class="active" ><a href="{% url 'music:deleteplaylist' playlist.id   %}">Delete playlist</a></li>
+        </ul>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Song</th>
+                    <th>Album</th>
+                    <th>Play</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for song in playlist.playlist_songs.all %}
+                <tr>
+                    <td>{{ song.song_title }}</td>
+                    <td>
+                        <a href="{% url 'music:detail' song.album.id %}">
+                            <img src="{{ song.album.album_logo.url }}" class="img-responsive" style="width: 20px; float: left; margin-right: 10px;" />
+                        </a>
+                        <a href="{% url 'music:detail' song.album.id %}">{{ song.album.album_title }}</a>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-success btn-xs" onclick="playthis('{{ song.audio_file.url }}')">
+                            <span class="glyphicon glyphicon-play"></span>&nbsp; Play
+                        </button>
+                    </td>
+                    <td>
+                        <a href="{% url 'music:deletesongfromplaylist' playlist.id song.id %}">delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {%endblock%}
+
 {%block playlists_active%}
 active
 {%endblock%}

@@ -1,15 +1,42 @@
 {% extends 'music/base.html' %}
+
 {%block body%}
-<form action="/music/addalbumstoplaylist/{{playlist.id}}" method="post">
+<h1><center>Select Albums to add in {{playlist.playlist_title}}</center></h1>
+<form action="/addalbumsstoplaylist/{{playlist.id}}" method="post">
 {% csrf_token %}
-{% for album in albums %}
-	<input type="checkbox" name="albumid[]" value="{{album.id}}" > {{album.album_title}}<br>
-{% endfor %}
-  
-  
-  <input type="submit" value="Submit">
-</form>
-
-
-{{playlist.playlist_title}}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+					<table class="table">
+                        <thead>
+                            <tr>
+                            	<th>select</th>
+                                <th>Album</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+							{% for album in albums %}
+                            <tr>
+                            	<td><input type="checkbox" name="albumid[]" value="{{album.id}}" ></td>
+                                <td>
+                                    <a href="{% url 'music:detail' album.id %}">
+                                        <img src="{{ album.album_logo.url }}" class="img-responsive" style="width: 20px; float: left; margin-right: 10px;" />
+                                    </a>
+                                    <a href="{% url 'music:detail' album.id %}">{{ album.album_title }}</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+	<input type="submit" value="Submit">
+</form>        
 {% endblock %}
+
+{%block playlists_active%}
+active
+{%endblock%}
