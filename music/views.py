@@ -3,7 +3,7 @@ from django.contrib.auth import logout
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404,redirect
 from django.db.models import Q
-from .forms import AlbumForm, SongForm, UserForm , PlaylistForm
+from .forms import AlbumForm, SongForm, UserForm , PlaylistForm, RenamePlaylistForm
 from .models import Album, Song, Playlist
 from django.http import HttpResponseRedirect
 import os, sys
@@ -432,3 +432,20 @@ def add_albums_to_playlist(request,playlist_id):
         'playlist':playlist
     }
     return render(request,'music/addalbumstoplaylist.html',context)
+
+'''
+    function rename_playlist()
+            takes playlist id 
+            check if the user is owner
+            sends or receives form
+'''
+def rename_playlist(request,playlist_id):
+    currentPlaylist = Playlist.objects.get(id = playlist_id)
+    form = RenamePlaylistForm(request.POST or None)
+    if currentPlaylist.user==request.user:
+        if request.method=="POST"  and form.is_valid() : 
+            currentPlaylist.playlist_title = form.cleaned_data['new_playlist_title']
+            currentPlaylist.save()
+            return redirect('/music/playlist/'+playlist_id) 
+        context = {'form':form,'old_name':currentPlaylist.playlist_title}
+        return render(request,'music/rename_playlist.html',context)

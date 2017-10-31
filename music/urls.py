@@ -26,4 +26,5 @@ urlpatterns = [
     url(r'^addalbumstoplaylist/(?P<playlist_id>[0-9]+)',views.add_albums_to_playlist,name='addalbumstoplaylist'),
     url(r'^deleteplaylist/(?P<playlist_id>[0-9]+)',views.delete_playlist,name = 'deleteplaylist'),
     url(r'^removeallsongsfromplaylist/(?P<playlist_id>[0-9]+)/(?P<typ>[0-9]+)',views.remove_allsongs_from_playlist,name = 'removeallsongsfromplaylist'),
+    url(r'^renameplaylist/(?P<playlist_id>[0-9]+)',views.rename_playlist,name='rename_playlist'),
 ]

@@ -9,6 +9,7 @@
             <li role="presentation" class="active" ><a href="{% url 'music:addalbumstoplaylist' playlist.id %}">Add albums</a></li>
             <li role="presentation" class="active" ><a href="{% url 'music:removeallsongsfromplaylist' playlist.id  0 %}">Remove all</a></li>
             <li role="presentation" class="active" ><a href="{% url 'music:deleteplaylist' playlist.id   %}">Delete playlist</a></li>
+            <li role="presentation" class="active" ><a href="{% url 'music:rename_playlist' playlist.id   %}">Rename</a></li>
         </ul>
     </div>
 </div>

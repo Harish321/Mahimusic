@@ -26,3 +26,7 @@ class PlaylistForm(forms.ModelForm):
 	class Meta:
 		model = Playlist
 		fields = ['playlist_title']
+
+#form to rename playlist
+class RenamePlaylistForm(forms.Form):
+    new_playlist_title = forms.CharField(widget=forms.TextInput(attrs={'size': '40'}))
