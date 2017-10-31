@@ -115,6 +115,13 @@
         if(keyCode==78) {
             playnext(current)
         }
+        if (keyCode == 32) {
+            if (audio.paused) {
+                audio.play();
+            }
+            else
+                audio.pause();
+        }
         
 }
 </script>
