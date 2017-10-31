@@ -363,7 +363,7 @@ def playlists(request):
     return render(request,'music/playlists.html',context)
 
 def playlist(request,playlist_id):
-    currentPlaylist = Playlist(id = playlist_id,user = request.user)
+    currentPlaylist = Playlist.objects.filter(id = playlist_id,user = request.user)[0]
     allsongs = currentPlaylist.playlist_songs.all()
     l = givesongsurl(allsongs)
     context = {

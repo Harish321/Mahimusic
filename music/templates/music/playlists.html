@@ -10,6 +10,7 @@
     <div class="row">
 
         <div class="col-sm-12">
+                <h3><center>Playlists</center></h3>
 
             <div class="panel panel-default">
                 <div class="panel-body">
@@ -17,17 +18,15 @@
                         <thead>
                             <tr>
                                 <th>Playlist title</th>
-                                <th>Open</th>
                                 <th>Delete</th>
-                                <th>allsongs</th>
-                                <th>play</th>
+                                <th>Removeallsongs</th>
+                                <th>Play</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for playlist in zipped %}
                                 <tr>
-                                    <td>{{ playlist.0.playlist_title }}</td>
-                                    <td><a href="{% url 'music:playlist' playlist.0.id %}">open</a></td>
+                                    <td><a href="{% url 'music:playlist' playlist.0.id %}">{{ playlist.0.playlist_title }}</a></td>
                                     <td><a href="{% url 'music:deleteplaylist' playlist.0.id%}">Delete</a></td>
                                     <td><a href="{% url 'music:removeallsongsfromplaylist' playlist.0.id  1 %}">remove all songs</a></td>
                                     <td><button type="button" class="btn btn-success btn-xs" onclick="playthislist({{ playlist.1 }})">
@@ -46,3 +45,6 @@
 
 </div>
 {% endblock %}
+{%block playlists_active%}
+active
+{%endblock%}
