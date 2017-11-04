@@ -2,7 +2,7 @@
 
 {%block body%}
 <h1><center>Select Albums to add in {{playlist.playlist_title}}</center></h1>
-<form action="/addalbumsstoplaylist/{{playlist.id}}" method="post">
+<form action="/addalbumstoplaylist/{{playlist.id}}" method="post">
 {% csrf_token %}
     <div class="row">
         <div class="col-sm-12">
