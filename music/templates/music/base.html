@@ -122,6 +122,14 @@
             else
                 audio.pause();
         }
+        if (keyCode == 40) {
+            //decreases volume of the player ---- down arrow
+            audio.volume = audio.volume - 0.1;
+        }
+        if (keyCode == 38) {
+            //increases  volume of the player ----- up arrow
+            audio.volume = audio.volume + 0.1;
+        }
         
 }
 </script>
