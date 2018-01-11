@@ -125,6 +125,9 @@
         if (keyCode == 40) {
             //decreases volume of the player ---- down arrow
             audio.volume = audio.volume - 0.1;
+            if ((audio.volume - 0.1 ) < 0){
+                audio.volume = 0;
+            }
         }
         if (keyCode == 38) {
             //increases  volume of the player ----- up arrow

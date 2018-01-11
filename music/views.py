@@ -449,3 +449,21 @@ def rename_playlist(request,playlist_id):
             return redirect('/music/playlist/'+playlist_id) 
         context = {'form':form,'old_name':currentPlaylist.playlist_title}
         return render(request,'music/rename_playlist.html',context)
+'''
+    function view_user()
+        if user and requested user are same then goes to home page
+        get albums
+        get songs
+        sends data to view
+'''
+def view_user(request,user_id):
+    if int(user_id) == request.user.id:
+        return HttpResponseRedirect('/')
+    albums = Album.objects.filter(user = user_id)
+    print request.user.id
+    allsongs = Song.objects.filter(user = user_id )
+    l = []
+    for a in allsongs:
+                l.append(a.audio_file.url)
+    context = {'albums':albums,'l':l}
+    return render(request,'music/viewuser.html',context)
