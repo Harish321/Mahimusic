@@ -2,54 +2,111 @@
 {% block albums_active %}active{% endblock %}
 
 {% block body %}
-<div class="albums-container container-fluid">
+<style>
+    
+    #myImage {
+        object-fit: contain;
+    zoom: 2;  
+    display: block;
+    margin: auto;
+    height: auto;
+    max-height: 100%;
+    width: auto;
+    max-width: 100%;
+}
+    .album_title{
+        text-align: center;
+        vertical-align: middle;
+        overflow: hidden;
+        width: 100%;
+        height: 15%;
+        border: 4px solid green;
+    }
+    .album_containers{
+        padding: 50px;
+        display: grid;
+        justify-items: center;
+    }
+    .album_logo{
 
-    <!-- Albums -->
-    <div class="row">
-        <div class="col-sm-12">
+        border: 2px solid blue;
+        width: 100%;
+        height: 85%;
+    }
+    
+    
+    .single_album{
+        height:250px;
+    }
+
+    
+    
+    .single_album > div {
+    
+        /* padding: 10px; */
+        /* background-color: white; */
+
+    }
+    .albums_m > div{
+        background-color: white;
+        
+    }
+    .albums_m{
+
+        display:grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+        grid-gap: 2rem;
+        
+    }
+</style>
+
             <h3>{{ user.username }}'s Albums</h3>
             {{artwork}}
-        </div>
         {% if albums %}
+        <div class = "album_containers">       
+        <div class = "albums_m">
             {% for album in albums %}
-                <div class="col-sm-4 col-lg-2">
-                    <div class="thumbnail">
-                        <a href="{% url 'music:detail' album.id %}">
-                            <img src="{{ album.album_logo.url }}" class="img-responsive">
-                        </a>
-                        <div class="caption">
+                        <div class="single_album">
+                            <div class="album_logo">
+                                <a href="{% url 'music:detail' album.id %}">
+                                <img id ="myImage"  src="{{ album.album_logo.url }}" class="img-responsive">
+                                </a>
+                            </div>
+                            <div class="album_title">
+                                <!-- <h4>Text</h4> -->
                             <h4>{{ album.album_title }}</h4>
-                            <h4>{{ album.artist }}</h4>
+                            </div>
 
-                            <!-- View Details -->
+                            <!-- View Details
                             <a href="{% url 'music:detail' album.id %}" class="btn btn-primary btn-sm" role="button">View Details</a>
 
-                            <!-- Delete Album -->
-                            <form action="{% url 'music:delete_album' album.id %}" method="post" style="display: inline;">
+                            <!Delete Album -->
+                            <!-- <form action="{% url 'music:delete_album' album.id %}" method="post" style="display: inline;">
                                 {% csrf_token %}
                                 <input type="hidden" name="album_id" value="{{ album.id }}" />
                                 <button type="submit" class="btn btn-default btn-sm">
                                     <span class="glyphicon glyphicon-trash"></span>
                                 </button>
-                            </form>
+                            </form> -->
 
                             <!-- Favorite Album -->
-                            <a href="{% url 'music:favorite_album' album.id %}" class="btn btn-default btn-sm btn-favorite" role="button">
+                            <!-- <a href="{% url 'music:favorite_album' album.id %}" class="btn btn-default btn-sm btn-favorite" role="button">
                                 <span class="glyphicon glyphicon-star {% if album.is_favorite %}active{% endif %}"></span>
-                            </a>
+                            </a> -->
 
+                        
                         </div>
-                    </div>
-                </div>
-                {% cycle '' '' '' '' '' '<div class="clearfix visible-lg"></div>' %}
+                {% cycle '' '' '' '' '' '' %}
             {% endfor %}
+            </div>
+            </div>
         {% else %}
-            <div class="col-sm-12">
+            
                 <br>
                 
-            </div>
+    
         {% endif %}
-    </div>
+    
 
     <!-- If user searches and there are songs -->
     {% if songs %}
