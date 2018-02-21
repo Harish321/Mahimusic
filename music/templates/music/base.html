@@ -135,10 +135,11 @@
         
 }
 $("#albums_button").click(function () {
+    $(".impor").empty();
     console.log("clicked");
      $.ajax({url: "http://localhost:8000/music/",success: function(result){
             var i = $(result).find(".impo").html();  
-            console.log(i);
+            $(".impor").append(i);
         }
 
 })
