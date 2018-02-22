@@ -134,7 +134,7 @@
         }
         
 }
-var replace = function (link) {
+function replace(link) {
         $(".impor").empty();
         $.ajax({url: link, success: function(result){
                 var i = $(result).find(".impo").html();  
@@ -142,29 +142,15 @@ var replace = function (link) {
                 }
               });
 };
+
 $("#albums_button").click(function () {
-        $(".impor").empty();
-        $.ajax({url: "http://localhost:8000/music/", success: function(result){
-                var i = $(result).find(".impo").html();  
-                $(".impor").append(i);
-                }
-              });
+    replace("http://localhost:8000/music/");
 });
 $("#songs_button").click(function () {
-        $(".impor").empty();
-        $.ajax({url: "http://localhost:8000/music/songs/all/", success: function(result){
-                var i = $(result).find(".impo").html();  
-                $(".impor").append(i);
-                }
-              });
+    replace("http://localhost:8000/music/songs/all/");
 });
 $("#playlists_button").click(function () {
-        $(".impor").empty();
-        $.ajax({url: "http://localhost:8000/music/playlists/", success: function(result){
-                var i = $(result).find(".impo").html(); 
-                $(".impor").append(i);
-                }
-              });
+    replace("http://localhost:8000/music/playlists/");
 });
 </script>
 </body>

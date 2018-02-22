@@ -15,9 +15,8 @@
             {% for album in albums %}
                 <div class="col-sm-4 col-lg-2">
                     <div class="thumbnail">
-                        <a href="{% url 'music:detail' album.id %}">
-                            <img src="{{ album.album_logo.url }}" class="img-responsive">
-                        </a>
+                        {% url 'music:detail' album.id as link%}
+                            <img src="{{ album.album_logo.url }}" class="img-responsive" onclick="replace('{{link}}')">
                         <div class="caption">
                             <h4>{{ album.album_title }}</h4>
                             <h4>{{ album.artist }}</h4>
