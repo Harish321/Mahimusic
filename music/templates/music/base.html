@@ -12,6 +12,7 @@
     <script src="{% static 'music/js/bootstrap.js' %}"></script>
     <script src="{% static 'music/js/main.js' %}"></script>
     <script src="{% static 'music/js/ajax.js' %}"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js" integrity="sha384-FzT3vTVGXqf7wRfy8k4BiyzvbNfeYjK+frTVqZeNDFl8woCbF0CYG6g2fMEFFo/i" crossorigin="anonymous"></script>
     <!-- Temporary style -->
     <style>
         .modal {
@@ -90,7 +91,7 @@
             <ul class="nav navbar-nav navbar-right">
                 <li><a id="play all" href="#" onclick="playall();return false;"><span class="glyphicon glyphicon-music" aria-hidden="true"></span>&nbsp; Play All</a>
                 </li>
-                <li><a id="add song" href="#" onclick="addsong();return false;"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp; Add Songs</a>
+                <li><a id="addsong" href="#" onclick="addsong();return false;"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp; Add Songs</a>
                 </li>
                 <li>
                     <a href="{% url 'music:create_playlist' %}">
@@ -109,16 +110,13 @@
                 <!-- Modal content -->
                 <div class="modal-content">
                   <span class="close">&times;</span>
-                  <form class="form-horizontal" role="form" action="{% url 'music:create_song' %}" method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <input type="hidden" name="album" value="{{ album }}">
-                    {% include 'music/form_template.html' %}
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <!-- <button type="submit" class="btn btn-success">Submit</button> -->
-                        </div>
-                    </div>
-                </form>
+                  <div class="inside-modal" id="myModalcontent"></div>
+                  <div class="progress">
+                    <div class="bar"></div >
+                    <div class="percent">0%</div >
+                </div>
+                
+                <div id="status"></div>
                 </div>
               
               </div>

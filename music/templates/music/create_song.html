@@ -1,8 +1,12 @@
-{% extends 'music/base.html' %}
-{% block title %}Add a New Song{% endblock %}
-{% block albums_active %}active{% endblock %}
+{% load staticfiles %}
+<!-- <script src="{% static 'music/js/jquery.js'%}"></script> -->
+    <script src="{% static 'music/js/bootstrap.js' %}"></script>
+    <script src="{% static 'music/js/main.js' %}"></script>
+    <script src="{% static 'music/js/ajax.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js" integrity="sha384-FzT3vTVGXqf7wRfy8k4BiyzvbNfeYjK+frTVqZeNDFl8woCbF0CYG6g2fMEFFo/i" crossorigin="anonymous"></script>
 
 {% block body %}
+
 <div class="container-fluid">
 
     <div class="row">
@@ -21,10 +25,11 @@
                     {% if error_message %}
                         <p><strong>{{ error_message }}</strong></p>
                     {% endif %}
-                    <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
+                    <form class="form-horizontal" role="form" action="{% url 'music:create_song'%}" id="songfile" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <input type="hidden" name="album" value="{{ album }}">
                         {% include 'music/form_template.html' %}
+                        <input type="submit" name="submit" id="addsubmit">
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
                                 <!-- <button type="submit" class="btn btn-success">Submit</button> -->
@@ -39,6 +44,9 @@
     </div>
 
 </div>
+<script>
+
+    </script>
 
 {% endblock %}
 
