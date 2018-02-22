@@ -1,6 +1,7 @@
 {%extends 'music/base.html'%}
 
 {%block body%}
+<div class="impo">
 {% for a in p %}
 	{{a.playlist_songs.all.0.song_title}}
 {%endfor%}
@@ -38,6 +39,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 {% endblock %}
 
