@@ -1,5 +1,4 @@
 {% extends 'music/base.html' %}
-{% block albums_active %}active{% endblock %}
 
 {% block body %}
 <div class="impo">
@@ -16,7 +15,7 @@
                 <div class="col-sm-4 col-lg-2">
                     <div class="thumbnail">
                         {% url 'music:detail' album.id as link%}
-                            <img src="{{ album.album_logo.url }}" class="img-responsive" onclick="replace('{{link}}')">
+                            <img src="{{ album.album_logo.url }}" class="img-responsive" onclick="replace('{{link}}')" style="cursor: pointer;">
                         <div class="caption">
                             <h4>{{ album.album_title }}</h4>
                             <h4>{{ album.artist }}</h4>
