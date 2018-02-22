@@ -3,16 +3,14 @@
 
 {% block body %}
 <style>
-    
+    body{
+        padding: 10px;
+    }
+    .maindiv{
+    }
     #myImage {
-        object-fit: contain;
-    zoom: 2;  
-    display: block;
-    margin: auto;
-    height: auto;
-    max-height: 100%;
-    width: auto;
-    max-width: 100%;
+    width: 100%;
+    height:100%;
 }
     .album_title{
         text-align: center;
@@ -23,46 +21,101 @@
         border: 4px solid green;
     }
     .album_containers{
-        padding: 50px;
+        
+        padding: 30px;
         display: grid;
-        justify-items: center;
+        /*align-items:stretch;*/
     }
     .album_logo{
-
-        border: 2px solid blue;
+        background: white;
+        padding: 5px;
+        border: 2px solid white;
         width: 100%;
         height: 85%;
     }
-    
-    
-    .single_album{
-        height:250px;
-    }
 
     
-    
-    .single_album > div {
+    .single_album {
+        position: relative;
     
         /* padding: 10px; */
         /* background-color: white; */
 
     }
     .albums_m > div{
-        background-color: white;
         
     }
+
     .albums_m{
 
+
         display:grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-        grid-gap: 2rem;
+        padding: 0em;
+        grid-template-columns: repeat(6,1fr);
+        grid-gap:1rem;
+        grid-auto-rows: 17em;
         
     }
+
+    .text-block > h5{
+        text-shadow: 1px 1px 1px  rgba(0, 0,0,0.6);
+        font-size: 15px !important;
+        margin-top: 0px !important;
+        margin-bottom: 0px !important;
+    }
+    .text-block {
+        pointer-events: none;
+        box-shadow: -2px 2px 1px rgba(0, 0,0,0.5);
+        border : 4.5px solid #34495E;
+        position: absolute;
+        bottom: 50px;
+        right :0px;
+        background-color: #34495E;
+        color:white;
+        height: 13% !important; 
+        width: 75%;
+        text-align: center;
+        overflow: hidden;
+        font-size: 200px !important;
+        padding: 4px;
+    } 
+
+    /* Media Query */
+        @media(max-width:1050px){
+    .albums_m{
+        grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+    }       
+    .single_album{
+        
+        max-width: 20em;
+        position: relative;
+        
+    }
+    .text-block {
+        pointer-events: none;
+        box-shadow: -2px 2px 1px rgba(0, 0,0,0.5);
+        border : 4.5px solid #34495E;
+        position: absolute;
+        bottom: 50px;
+        right :0px;
+        background-color: #34495E;
+        color:white;
+        height: 13% !important; 
+        width: 75%;
+        text-align: center;
+        overflow: hidden;
+        font-size: 200px !important;
+        padding: 4px;
+    } 
+
+}
+
 </style>
 
             <h3>{{ user.username }}'s Albums</h3>
             {{artwork}}
         {% if albums %}
+        <div class = "maindiv">
         <div class = "album_containers">       
         <div class = "albums_m">
             {% for album in albums %}
@@ -71,11 +124,11 @@
                                 <a href="{% url 'music:detail' album.id %}">
                                 <img id ="myImage"  src="{{ album.album_logo.url }}" class="img-responsive">
                                 </a>
+                                <span class="text-block">
+                                        <h5>{{album.album_title}}</h5>
+                                </span>
                             </div>
-                            <div class="album_title">
-                                <!-- <h4>Text</h4> -->
-                            <h4>{{ album.album_title }}</h4>
-                            </div>
+                            
 
                             <!-- View Details
                             <a href="{% url 'music:detail' album.id %}" class="btn btn-primary btn-sm" role="button">View Details</a>
@@ -100,6 +153,7 @@
             {% endfor %}
             </div>
             </div>
+        </div>
         {% else %}
             
                 <br>

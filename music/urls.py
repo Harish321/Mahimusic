@@ -27,4 +27,6 @@ urlpatterns = [
     url(r'^deleteplaylist/(?P<playlist_id>[0-9]+)',views.delete_playlist,name = 'deleteplaylist'),
     url(r'^removeallsongsfromplaylist/(?P<playlist_id>[0-9]+)/(?P<typ>[0-9]+)',views.remove_allsongs_from_playlist,name = 'removeallsongsfromplaylist'),
     url(r'^renameplaylist/(?P<playlist_id>[0-9]+)',views.rename_playlist,name='rename_playlist'),
+    url(r'^index2',views.index2,name='index2'),
+    url(r'^search',views.search,name ='search'),
 ]

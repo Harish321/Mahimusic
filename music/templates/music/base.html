@@ -11,6 +11,47 @@
     <script src="{% static 'music/js/jquery.js'%}"></script>
     <script src="{% static 'music/js/bootstrap.js' %}"></script>
     <script src="{% static 'music/js/main.js' %}"></script>
+    <script src="{% static 'music/js/ajax.js' %}"></script>
+    <!-- Temporary style -->
+    <style>
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
@@ -34,21 +75,22 @@
                 <li class="{% block songs_active %}{% endblock %}"><a href="{% url 'music:songs' 'all' %}"><span class="glyphicon glyphicon-music" aria-hidden="true"></span>&nbsp; Songs</a></li>
                 <li class="{% block playlists_active %}{% endblock %}"><a href="{% url 'music:playlists' %}"><span class="glyphicon glyphicon-music" aria-hidden="true"></span>&nbsp; Playlists</a></li>
             </ul>
-            <form class="navbar-form navbar-left" role="search" method="get" action="{% url 'music:index' %}">
+            <!-- <form class="navbar-form navbar-left" role="search" id="search"> -->
                 <div class="form-group">
-                    <input type="text" class="form-control" name="q" value="{{ request.GET.q }}">
+                    {% csrf_token %}
+                    <input type="text" class="form-control" name="search" id = "search">
                 </div>
-                <button type="submit" class="btn btn-default">Search</button>
-            </form>
+                <!-- <button type="submit" class="btn btn-default">Search</button> -->
+            <!-- </form> -->
+            <p id = "search_result">
+
+            </p>
                 
 
             <ul class="nav navbar-nav navbar-right">
                 <li><a id="play all" href="#" onclick="playall();return false;"><span class="glyphicon glyphicon-music" aria-hidden="true"></span>&nbsp; Play All</a>
                 </li>
-                <li>
-                    <a href="{% url 'music:create_song' %}">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp; Add Song
-                    </a>
+                <li><a id="add song" href="#" onclick="addsong();return false;"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp; Add Songs</a>
                 </li>
                 <li>
                     <a href="{% url 'music:create_playlist' %}">
@@ -62,6 +104,24 @@
                 </li>
             </ul>
         </div>
+        <div id="myModal" class="modal">
+
+                <!-- Modal content -->
+                <div class="modal-content">
+                  <span class="close">&times;</span>
+                  <form class="form-horizontal" role="form" action="{% url 'music:create_song' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="album" value="{{ album }}">
+                    {% include 'music/form_template.html' %}
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <!-- <button type="submit" class="btn btn-success">Submit</button> -->
+                        </div>
+                    </div>
+                </form>
+                </div>
+              
+              </div>
 
     </div>
 
@@ -73,7 +133,10 @@
     /**
     stores url of all songs in list and plays one by one
     */
-    var list = {{l|safe}}
+    var list = [];
+    {%if l%}
+    var list = {{l|safe}};
+    {%endif%}
     var current = 0;
     var audio = document.getElementById('audio');
     var next  = current +1;    
@@ -132,6 +195,22 @@
         }
         
 }
+var span = document.getElementsByClassName("close")[0];
+var modal = document.getElementById('myModal');
+span.onclick = function() {
+    modal.style.display = "none";
+}
+function addsong(){
+    var modal = document.getElementById('myModal');
+    modal.style.display = "block";
+
+}
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
 </script>
 </body>
 </html>

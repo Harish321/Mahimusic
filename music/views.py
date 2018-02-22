@@ -1,8 +1,9 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404,redirect
+from django.shortcuts import render, get_object_or_404,redirect,render_to_response
 from django.db.models import Q
+from django.utils.datastructures import MultiValueDictKeyError
 from .forms import AlbumForm, SongForm, UserForm , PlaylistForm, RenamePlaylistForm
 from .models import Album, Song, Playlist
 from django.http import HttpResponseRedirect
@@ -142,10 +143,12 @@ def delete_album(request, album_id):
     if the folder is deleted then redirect to home page
 '''
 def delete_song(request, album_id, song_id):
+    print album_id
+    print song_id
     album = get_object_or_404(Album, pk=album_id)
     song = Song.objects.get(pk=song_id,user=request.user)
     song.delete()
-    remove_song(request.user.pk,album.album_title,song.song_title)
+    # remove_song(request.user.pk,album.album_title,song.song_title)
     deleted = if_no_songs_delete_folder(request.user.pk,album.album_title,album)
     if deleted:
         return HttpResponseRedirect('/')
@@ -202,6 +205,7 @@ def index(request):
     if not request.user.is_authenticated():
         return render(request, 'music/login.html')
     else:
+        form = SongForm(request.POST or None, request.FILES or None)
         albums = Album.objects.filter(user=request.user)
         allsongs  = Song.objects.filter(user=request.user)
         query = request.GET.get("q")
@@ -215,16 +219,16 @@ def index(request):
             ).distinct()
             l = []
             l = givesongsurl(song_results)
-            return render(request, 'music/index.html', {
+            return render_to_response('music/index2.html', {
                 'albums': albums,
                 'songs': song_results,
-                'l':l
+                'l':l,
             })
         else:
             l = []
             for a in allsongs:
                 l.append(a.audio_file.url)
-            return render(request, 'music/index.html', {'albums': albums,'l':l})
+            return render(request, 'music/index.html', {'albums': albums,'l':l,'form':form})
 
 
 def logout_user(request):
@@ -449,3 +453,38 @@ def rename_playlist(request,playlist_id):
             return redirect('/music/playlist/'+playlist_id) 
         context = {'form':form,'old_name':currentPlaylist.playlist_title}
         return render(request,'music/rename_playlist.html',context)
+
+def index2(request):
+    return render(request,'music/index2.html')
+
+def search(request):
+    if not request.user.is_authenticated():
+        return render(request, 'music/login.html')
+    else:
+        # form = SongForm(request.POST or None, request.FILES or None)
+        if request.method == "POST":
+            albums = Album.objects.filter(user=request.user)
+            allsongs  = Song.objects.filter(user=request.user)
+            try:
+                query = request.POST['search_text']
+            except MultiValueDictKeyError:
+                query = False
+            # query = request.GET['search_text']
+            print query
+            if query:
+                albums = albums.filter(
+                    Q(album_title__icontains=query) |
+                    Q(artist__icontains=query)
+                ).distinct()
+                song_results = allsongs.filter(
+                    Q(song_title__icontains=query)
+                ).distinct()
+                l = []
+                l = givesongsurl(song_results)
+                return render_to_response('music/index2.html', {
+                    'albums': albums,
+                    'songs': song_results,
+                    'l':l,
+                })
+            else:
+                return render_to_response('music/index2.html')
