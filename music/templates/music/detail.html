@@ -3,6 +3,7 @@
 {% block albums_active %}active{% endblock %}
 
 {% block body %}
+<div class="impo">
 <div class="container-fluid songs-container">
 
     <div class="row">
@@ -11,13 +12,11 @@
         <div class="col-sm-4 col-md-3">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <a href="{% url 'music:detail' album.id %}">
                         {% if album.album_logo %}
                             <img src="{{ album.album_logo.url }}" class="img-responsive">
                         {% else %}
                             <h3>No image to display</h3>
                         {% endif %}
-                    </a>
                     <h4>{{ album.album_title }} <small>{{ album.genre }}</small></h4>
                     <h4>{{ album.artist }}</h4>
                 </div>
@@ -85,5 +84,5 @@
     </div>
 
 </div>
-
+</div>
 {% endblock %}

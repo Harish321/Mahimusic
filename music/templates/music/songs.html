@@ -1,8 +1,8 @@
 {% extends 'music/base.html' %}
 {% block title %}All Songs{% endblock %}
-{% block songs_active %}active{% endblock %}
 
 {% block body %}
+<div class="impo">
 <div class="container-fluid songs-container">
 
     <div class="row">
@@ -44,7 +44,8 @@
                                         <a href="{% url 'music:detail' song.album.id %}">
                                             <img src="{{ song.album.album_logo.url }}" class="img-responsive" style="width: 20px; float: left; margin-right: 10px;" />
                                         </a>
-                                        <a href="{% url 'music:detail' song.album.id %}">{{ song.album.album_title }}</a>
+                                        {% url 'music:detail' song.album.id as link%}
+                                        <div style="cursor: pointer;" onclick="replace('{{link}}')">{{ song.album.album_title }}</div>
                                     </td>
                                     <td>
                                         <a href="{% url 'music:favorite' song.id %}" class="btn-favorite"><span class="glyphicon glyphicon-star {% if song.is_favorite %}active{% endif %}"></span></a>
@@ -60,5 +61,6 @@
 
     </div>
 
+</div>
 </div>
 {% endblock %}
