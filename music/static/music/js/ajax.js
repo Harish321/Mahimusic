@@ -1,8 +1,9 @@
 $(function(){
+    // Ajax call for search //
     $('#search').keyup(function(){
         $.ajax({
             type: "POST",
-            url: "search",
+            url: "/search",
             data:{
                 'search_text':$('#search').val(),
                 'csrfmiddlewaretoken':$("input[name=csrfmiddlewaretoken]").val()
@@ -11,6 +12,7 @@ $(function(){
             dataType: 'html'
         })
     })
+    // Ajax call for add_song modal //
     $('#addsong').click(function(){
         $.ajax({
             type: "POST",
@@ -22,23 +24,7 @@ $(function(){
             dataType: 'html'
         })
     })
-    // $('#addsubmit').click(function(event){
-    //     alert('formgetsubmited');
-    //     event.preventDefault();
-    //     // var $audio_file = ;
-    //     var form = $('#songfile')[0];
-    //     var data = new FormData(form);
-    //     data.append('csrfmiddlewaretoken',$("input[name=csrfmiddlewaretoken]").val());
-    //     $.ajax({
-    //         type:"POST",
-    //         url: "/music/create_song/",
-    //         data:data,
-    //         success: addsongdbSuccess,
-    //         dataType: 'html'
-    //     })
-        
-    // })
-
+    // Ajax call for add song to database//
     var bar = $('.bar');
     var percent = $('.percent');
     var status = $('#status');
@@ -65,16 +51,17 @@ $(function(){
 });
 
 function searchSuccess(data,textStatus,jqXHR){
-    $('#search_result').html(data);
-    // console.log(data);
+    $('#dropdown-content').css('display','block');
+    $('#dropdown-content').html(data);
+    if($('#search').val().length<1){
+        $('#dropdown-content').css('display','none');
+    }
 }
 
 function addsongSuccess(data,textStatus,jqXHR){
     $('#myModalcontent').html(data);
-    // console.log(data);
 }
 
 function addsongdbSuccess(data,textStatus,jqXHR){
-    // alert('song added successfully to database');
     $('#myModal').css('display','none');
 }

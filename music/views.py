@@ -42,10 +42,8 @@ files variable stores all the uploaded files.
 
 '''
 def create_song(request):
-    print "Ac"
     form = SongForm(request.POST or None, request.FILES or None)
     if form.is_valid():
-        print "Success"
         files = request.FILES.getlist('audio_file')
         print files
         for a in files:
@@ -146,8 +144,6 @@ def delete_album(request, album_id):
     if the folder is deleted then redirect to home page
 '''
 def delete_song(request, album_id, song_id):
-    print album_id
-    print song_id
     album = get_object_or_404(Album, pk=album_id)
     song = Song.objects.get(pk=song_id,user=request.user)
     song.delete()
@@ -211,27 +207,10 @@ def index(request):
         form = SongForm(request.POST or None, request.FILES or None)
         albums = Album.objects.filter(user=request.user)
         allsongs  = Song.objects.filter(user=request.user)
-        query = request.GET.get("q")
-        if query:
-            albums = albums.filter(
-                Q(album_title__icontains=query) |
-                Q(artist__icontains=query)
-            ).distinct()
-            song_results = allsongs.filter(
-                Q(song_title__icontains=query)
-            ).distinct()
-            l = []
-            l = givesongsurl(song_results)
-            return render_to_response('music/index2.html', {
-                'albums': albums,
-                'songs': song_results,
-                'l':l,
-            })
-        else:
-            l = []
-            for a in allsongs:
-                l.append(a.audio_file.url)
-            return render(request, 'music/index.html', {'albums': albums,'l':l,'form':form})
+        l = []
+        for a in allsongs:
+            l.append(a.audio_file.url)
+        return render(request, 'music/index.html', {'albums': albums,'l':l,'form':form})
 
 
 def logout_user(request):
