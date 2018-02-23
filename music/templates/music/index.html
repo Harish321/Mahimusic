@@ -2,164 +2,35 @@
 {% block albums_active %}active{% endblock %}
 
 {% block body %}
-<style>
-    body{
-        padding: 10px;
-    }
-    .maindiv{
-    }
-    #myImage {
-    width: 100%;
-    height:100%;
-}
-    .album_title{
-        text-align: center;
-        vertical-align: middle;
-        overflow: hidden;
-        width: 100%;
-        height: 15%;
-        border: 4px solid green;
-    }
-    .album_containers{
-        
-        padding: 30px;
-        display: grid;
-        /*align-items:stretch;*/
-    }
-    .album_logo{
-        background: white;
-        padding: 5px;
-        border: 2px solid white;
-        width: 100%;
-        height: 85%;
-    }
-
-    
-    .single_album {
-        position: relative;
-    
-        /* padding: 10px; */
-        /* background-color: white; */
-
-    }
-    .albums_m > div{
-        
-    }
-
-    .albums_m{
+{% load static%}
+<link rel="stylesheet" href="{% static 'music/styles/index_style.css' %}"/>
 
 
-        display:grid;
-        padding: 0em;
-        grid-template-columns: repeat(6,1fr);
-        grid-gap:1rem;
-        grid-auto-rows: 17em;
-        
-    }
-
-    .text-block > h5{
-        text-shadow: 1px 1px 1px  rgba(0, 0,0,0.6);
-        font-size: 15px !important;
-        margin-top: 0px !important;
-        margin-bottom: 0px !important;
-    }
-    .text-block {
-        pointer-events: none;
-        box-shadow: -2px 2px 1px rgba(0, 0,0,0.5);
-        border : 4.5px solid #34495E;
-        position: absolute;
-        bottom: 50px;
-        right :0px;
-        background-color: #34495E;
-        color:white;
-        height: 13% !important; 
-        width: 75%;
-        text-align: center;
-        overflow: hidden;
-        font-size: 200px !important;
-        padding: 4px;
-    } 
-
-    /* Media Query */
-        @media(max-width:1050px){
-    .albums_m{
-        grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
-    }       
-    .single_album{
-        
-        max-width: 20em;
-        position: relative;
-        
-    }
-    .text-block {
-        pointer-events: none;
-        box-shadow: -2px 2px 1px rgba(0, 0,0,0.5);
-        border : 4.5px solid #34495E;
-        position: absolute;
-        bottom: 50px;
-        right :0px;
-        background-color: #34495E;
-        color:white;
-        height: 13% !important; 
-        width: 75%;
-        text-align: center;
-        overflow: hidden;
-        font-size: 200px !important;
-        padding: 4px;
-    } 
-
-}
-
-</style>
-
-            <h3>{{ user.username }}'s Albums</h3>
-            {{artwork}}
-        {% if albums %}
-        <div class = "maindiv">
+<h3>{{ user.username }}'s Albums</h3>
+{{artwork}}
+{% if albums %}
+    <div class = "maindiv">
         <div class = "album_containers">       
-        <div class = "albums_m">
-            {% for album in albums %}
-                        <div class="single_album">
-                            <div class="album_logo">
-                                <a href="{% url 'music:detail' album.id %}">
+            <div class = "albums_m">
+                {% for album in albums %}
+                    <div class="single_album">
+                        <div class="album_logo">
+                            <a href="{% url 'music:detail' album.id %}">
                                 <img id ="myImage"  src="{{ album.album_logo.url }}" class="img-responsive">
-                                </a>
-                                <span class="text-block">
-                                        <h5>{{album.album_title}}</h5>
-                                </span>
-                            </div>
-                            
-
-                            <!-- View Details
-                            <a href="{% url 'music:detail' album.id %}" class="btn btn-primary btn-sm" role="button">View Details</a>
-
-                            <!Delete Album -->
-                            <!-- <form action="{% url 'music:delete_album' album.id %}" method="post" style="display: inline;">
-                                {% csrf_token %}
-                                <input type="hidden" name="album_id" value="{{ album.id }}" />
-                                <button type="submit" class="btn btn-default btn-sm">
-                                    <span class="glyphicon glyphicon-trash"></span>
-                                </button>
-                            </form> -->
-
-                            <!-- Favorite Album -->
-                            <!-- <a href="{% url 'music:favorite_album' album.id %}" class="btn btn-default btn-sm btn-favorite" role="button">
-                                <span class="glyphicon glyphicon-star {% if album.is_favorite %}active{% endif %}"></span>
-                            </a> -->
-
-                        
-                        </div>
-                {% cycle '' '' '' '' '' '' %}
-            {% endfor %}
-            </div>
+                            </a>
+                            <span class="text-block">
+                                <h5>{{album.album_title}}</h5>
+                            </span>
+                        </div>                       
+                    </div>
+                    {% cycle '' '' '' '' '' '' %}
+                {% endfor %}
             </div>
         </div>
-        {% else %}
-            
-                <br>
-                
-    
-        {% endif %}
+    </div>
+{% else %}   
+<br>
+{% endif %}
     
 
     <!-- If user searches and there are songs -->
