@@ -1,0 +1,31 @@
+{% extends 'music/base.html' %}
+{%block body%}
+
+<div class="container-fluid songs-container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3><center>Users</center></h3>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>
+                                	<a href="{%url 'music:viewuser' user.id%}">{{user.username}}</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -44,7 +44,9 @@
                             <th>Title</th>
                             <th>Audio File</th>
                             <th>Favorite</th>
+                            {% if album.user == user %}
                             <th>Actions</th>
+                            {% endif %}
                         </tr>
                         </thead>
                         <tbody>
@@ -63,9 +65,11 @@
                                     <form action="{% url 'music:delete_song' album.id song.id %}" method="post" style="display: inline;">
                                         {% csrf_token %}
                                         <input type="hidden" name="song_id" value="{{ song.id }}" />
+                                        {% if album.user == user %}
                                         <button type="submit" class="btn btn-danger btn-xs">
                                             <span class="glyphicon glyphicon-remove"></span>&nbsp; Delete
                                         </button>
+                                        {% endif %}
                                     </form>
                                 </td>
                             </tr>
