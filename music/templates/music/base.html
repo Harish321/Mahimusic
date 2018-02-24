@@ -11,17 +11,11 @@
     <script src="{% static 'music/js/jquery.js'%}"></script>
     <script src="{% static 'music/js/bootstrap.js' %}"></script>
     <script src="{% static 'music/js/main.js' %}"></script>
-       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js" integrity="sha384-FzT3vTVGXqf7wRfy8k4BiyzvbNfeYjK+frTVqZeNDFl8woCbF0CYG6g2fMEFFo/i" crossorigin="anonymous"></script>
-    <script type="text/javascript">
-        $("#myform").ajaxForm({
-            url:'http://localhost:8000/music/create_song/',
-            type:'post'
-        })
-        replace("http://localhost:8000/music")
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js" integrity="sha384-FzT3vTVGXqf7wRfy8k4BiyzvbNfeYjK+frTVqZeNDFl8woCbF0CYG6g2fMEFFo/i" crossorigin="anonymous"></script>
 </head>
 
 <body>
+
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
 
@@ -81,72 +75,12 @@
 {% endblock %}
 </div>
 <audio controls id = "audio"> <!-- One or more source files, each referencing the same audio but in a different file format. The browser will choose the first file which it is able to play. -->  You will see this text if native audio playback is not supported. <!-- You could use this fall-back feature to insert a JavaScript-based audio player. --> </audio> 
-<script type="text/javascript">
-    /**
-    stores url of all songs in list and plays one by one
-    */
-    var list = {{l|safe}}
-    var current = 0;
-    var audio = document.getElementById('audio');
-    var next  = current +1;    
-    function play(item){
-        audio.pause();
-        audio.src = list[item]
-        audio.load();
-        audio.play(); 
-    }
-    function playnext(item){
-        next = item+1;
-        if(next <= list.length-1)
-            current = next;
-        else
-            current = 0;
-        play(current)
-    }
-    function playall(){  
-        current = 0;
-        play(current)
+<script type="text/javascript">    var list = {{l|safe}};
+</script>
+<script src="{% static 'music/js/player.js' %}"></script>
 
-        audio.addEventListener('ended',function(){
-            playnext(current)
-        });
-    }
-    function playthis(url) {
-        audio.pause();
-        audio.src = url;
-        audio.load();
-        audio.play();
-    }
-    function playthislist(l){
-        list = l;
-        playall();
-    }
-    window.addEventListener("keydown", handle, true);
-    function handle(e) {
-        var keyCode = e.keyCode;
-        if(keyCode==78) {
-            playnext(current)
-        }
-        if (keyCode == 32) {
-            if (audio.paused) {
-                audio.play();
-            }
-            else
-                audio.pause();
-        }
-        if (keyCode == 40) {
-            //decreases volume of the player ---- down arrow
-            audio.volume = audio.volume - 0.1;
-            if ((audio.volume - 0.1 ) < 0){
-                audio.volume = 0;
-            }
-        }
-        if (keyCode == 38) {
-            //increases  volume of the player ----- up arrow
-            audio.volume = audio.volume + 0.1;
-        }
-        
-}
+<script type="text/javascript">
+       
 function replace(link) {
         $(".impor").empty();
         $.ajax({url: link, success: function(result){
