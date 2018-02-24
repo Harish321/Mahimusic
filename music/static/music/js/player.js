@@ -44,7 +44,6 @@
             playnext(current)
         }
         if (keyCode == 32) {
-        	console.log("hii");
             if (audio.paused) {
                 audio.play();
             }

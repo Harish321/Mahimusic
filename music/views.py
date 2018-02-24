@@ -295,7 +295,7 @@ def register(request):
     return render(request, 'music/register.html', context)
 
 
-def songs(request, filter_by):
+def songs(request):
     if not request.user.is_authenticated():
         return render(request, 'music/login.html')
     else:
@@ -306,13 +306,11 @@ def songs(request, filter_by):
                     song_ids.append(song.pk)
             users_songs = Song.objects.filter(pk__in=song_ids)
             l = givesongsurl(users_songs)
-            if filter_by == 'favorites':
-                users_songs = users_songs.filter(is_favorite=True)
+            
         except Album.DoesNotExist:
             users_songs = []
         return render(request, 'music/songs.html', {
             'song_list': users_songs,
-            'filter_by': filter_by,
             'l':l
         })
 

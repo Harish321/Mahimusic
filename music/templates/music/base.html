@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="{% static 'music/bootstrap.css' %}">
     <link href="{% static 'music/fonts.css' %}" rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="{% static 'music/style.css' %}"/>
+    <script type="text/javascript">
+        var music = "{% url 'music:index' %}";
+        var songs = "{% url 'music:songs'  %}";
+        var playlists = "{% url 'music:playlists' %}";
+        var users = "{% url 'music:users' %}";
+    </script>
     <script src="{% static 'music/js/jquery.js'%}"></script>
     <script src="{% static 'music/js/bootstrap.js' %}"></script>
     <script src="{% static 'music/js/main.js' %}"></script>
@@ -78,6 +84,42 @@
 
 <script type="text/javascript">var list = {{l|safe}};</script>
 <script src="{% static 'music/js/player.js' %}"></script>
+<script type="text/javascript">
+var albums_button = $("#albums_button");
+var songs_button = $("#songs_button");
+var playlists_button = $("#playlists_button");
+var users_button = $("#users_button"); 
+
+function ActiveClass(butn) {
+    albums_button.removeClass("active");
+    songs_button.removeClass("active");
+    playlists_button.removeClass("active");
+    users_button.removeClass("active");
+    butn.addClass("active");
+}
+
+var albums = "{% url 'music:index' %}";
+var songs = "{% url 'music:songs' %}";
+var playlists ="{% url 'music:playlists' %}";
+var users = "{% url 'music:users' %}";
+
+albums_button.click(function () {
+    replace(albums);
+    ActiveClass(albums_button);
+});
+songs_button.click(function () {
+    replace(songs);
+    ActiveClass(songs_button);
+});
+playlists_button.click(function () {
+    replace(playlists);
+    ActiveClass(playlists_button);
+});
+users_button.click(function(){
+    replace(users);
+    ActiveClass(users_button);
+})
+</script>
 
 </body>
 </html>
