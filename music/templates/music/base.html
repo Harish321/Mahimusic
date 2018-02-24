@@ -75,48 +75,9 @@
 {% endblock %}
 </div>
 <audio controls id = "audio"> <!-- One or more source files, each referencing the same audio but in a different file format. The browser will choose the first file which it is able to play. -->  You will see this text if native audio playback is not supported. <!-- You could use this fall-back feature to insert a JavaScript-based audio player. --> </audio> 
-<script type="text/javascript">    var list = {{l|safe}};
-</script>
+
+<script type="text/javascript">var list = {{l|safe}};</script>
 <script src="{% static 'music/js/player.js' %}"></script>
 
-<script type="text/javascript">
-       
-function replace(link) {
-        $(".impor").empty();
-        $.ajax({url: link, success: function(result){
-                var i = $(result).find(".impo").html();  
-                $(".impor").append(i);
-                }
-              });
-};
-
-$("#albums_button").click(function () {
-    replace("http://localhost:8000/music/");
-});
-$("#songs_button").click(function () {
-    replace("http://localhost:8000/music/songs/all/");
-});
-$("#playlists_button").click(function () {
-    replace("http://localhost:8000/music/playlists/");
-});
-$("#users_button").click(function(){
-    replace("http://localhost:8000/music/users/");
-})
-$("#albums_button").click(function () {
-    $("#albums_button").addClass("active");
-    $("#songs_button").removeClass("active");
-    $("#playlists_button").removeClass("active");
-})
-$("#songs_button").click(function () {
-    $("#albums_button").removeClass("active");
-    $("#songs_button").addClass("active");
-    $("#playlists_button").removeClass("active");
-})
-$("#playlists_button").click(function () {
-    $("#albums_button").removeClass("active");
-    $("#songs_button").removeClass("active");
-    $("#playlists_button").addClass("active");
-})
-</script>
 </body>
 </html>
