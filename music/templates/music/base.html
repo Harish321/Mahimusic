@@ -42,7 +42,7 @@
                 <li  id="albums_button" style="cursor: pointer;"><a  ><span class="glyphicon glyphicon-cd" aria-hidden="true"></span> &nbsp; Albums</a></li>
                 <li style="cursor: pointer;"  id="songs_button"><a><span class="glyphicon glyphicon-music" aria-hidden="true"></span>&nbsp; Songs</a></li>
                 <li style="cursor: pointer;" id="playlists_button" ><a ><span class="glyphicon glyphicon-music" aria-hidden="true"></span>&nbsp; Playlists</a></li>
-                <li><a href="{% url 'music:users' %}"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>&nbsp; Users</a></li>
+                <li style="cursor: pointer;" id="users_button"><a ><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>&nbsp; Users</a></li>
             </ul>
             <form class="navbar-form navbar-left" role="search" method="get" action="{% url 'music:index' %}">
                 <div class="form-group">
@@ -165,6 +165,9 @@ $("#songs_button").click(function () {
 $("#playlists_button").click(function () {
     replace("http://localhost:8000/music/playlists/");
 });
+$("#users_button").click(function(){
+    replace("http://localhost:8000/music/users/");
+})
 $("#albums_button").click(function () {
     $("#albums_button").addClass("active");
     $("#songs_button").removeClass("active");

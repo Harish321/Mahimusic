@@ -1,6 +1,6 @@
 {% extends 'music/base.html' %}
 {%block body%}
-
+<div class="impo">
 <div class="container-fluid songs-container">
     <div class="row">
         <div class="col-sm-12">
@@ -17,7 +17,8 @@
                             {% for user in users %}
                             <tr>
                                 <td>
-                                	<a href="{%url 'music:viewuser' user.id%}">{{user.username}}</a>
+                                    {% url 'music:viewuser' user.id as link%}
+                                    <div style="cursor: pointer;color: blue" onclick="replace('{{link}}')">{{ user.username }}</div>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -27,5 +28,6 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 {% endblock %}
