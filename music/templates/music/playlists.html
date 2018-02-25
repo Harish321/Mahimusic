@@ -1,6 +1,8 @@
 {%extends 'music/base.html'%}
 
 {%block body%}
+<script>var list = {{l|safe}};</script>
+<div class="impo">
 {% for a in p %}
 	{{a.playlist_songs.all.0.song_title}}
 {%endfor%}
@@ -39,8 +41,6 @@
         </div>
     </div>
 </div>
+</div>
 {% endblock %}
 
-{%block playlists_active%}
-active
-{%endblock%}

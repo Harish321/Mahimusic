@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404,redirect
 from django.db.models import Q
 from .forms import AlbumForm, SongForm, UserForm , PlaylistForm, RenamePlaylistForm
-from .models import Album, Song, Playlist
+from .models import Album, Song, Playlist, User
 from django.http import HttpResponseRedirect
 import os, sys
 import shutil
@@ -165,8 +165,14 @@ def detail(request, album_id):
                 l.append(a.audio_file.url)
 
         except:
-            #if the requested album is not uploaded by the user then it redirects to the home page
-            return HttpResponseRedirect('/')
+            #if the requested album is not uploaded by the user then it redirects to the album page 
+            #without delete options
+            album = get_object_or_404(Album,pk=album_id)
+            albumUser = album.user
+            allsongs = Song.objects.filter(user=albumUser,album=album_id)
+            for a in allsongs:
+                l.append(a.audio_file.url)
+            return render(request, 'music/detail.html', {'album': album, 'user': user, 'l':l, 'albumUser':albumUser})
         return render(request, 'music/detail.html', {'album': album, 'user': user, 'l':l})
 
 
@@ -218,13 +224,14 @@ def index(request):
             return render(request, 'music/index.html', {
                 'albums': albums,
                 'songs': song_results,
-                'l':l
+                'l':l,
+                'searched':False
             })
         else:
             l = []
             for a in allsongs:
                 l.append(a.audio_file.url)
-            return render(request, 'music/index.html', {'albums': albums,'l':l})
+            return render(request, 'music/index.html', {'albums': albums,'l':l, 'searched':False})
 
 
 def logout_user(request):
@@ -244,21 +251,11 @@ def login_user(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                albums = Album.objects.filter(user=request.user)
-                allsongs  = Song.objects.filter(user=request.user)
-                l = givesongsurl(allsongs)
-                return render(request, 'music/index.html', {'albums': albums,'l':l})
+                return HttpResponseRedirect('/music/')
             else:
                 return render(request, 'music/login.html', {'error_message': 'Your account has been disabled'})
         else:
             return render(request, 'music/login.html', {'error_message': 'Invalid login'})
-    
-    #if refreshed then redirects to the same page
-    if request.user:
-        albums = Album.objects.filter(user=request.user)
-        allsongs  = Song.objects.filter(user=request.user)
-        l = givesongsurl(allsongs)
-        return render(request, 'music/index.html', {'albums': albums,'l':l})
     
     return render(request, 'music/login.html')
 
@@ -288,7 +285,7 @@ def register(request):
     return render(request, 'music/register.html', context)
 
 
-def songs(request, filter_by):
+def songs(request):
     if not request.user.is_authenticated():
         return render(request, 'music/login.html')
     else:
@@ -299,13 +296,11 @@ def songs(request, filter_by):
                     song_ids.append(song.pk)
             users_songs = Song.objects.filter(pk__in=song_ids)
             l = givesongsurl(users_songs)
-            if filter_by == 'favorites':
-                users_songs = users_songs.filter(is_favorite=True)
+            
         except Album.DoesNotExist:
             users_songs = []
         return render(request, 'music/songs.html', {
             'song_list': users_songs,
-            'filter_by': filter_by,
             'l':l
         })
 
@@ -449,3 +444,31 @@ def rename_playlist(request,playlist_id):
             return redirect('/music/playlist/'+playlist_id) 
         context = {'form':form,'old_name':currentPlaylist.playlist_title}
         return render(request,'music/rename_playlist.html',context)
+
+'''
+    function users()
+        gets the user objects
+        returns them
+'''
+def users(request):
+    users = User.objects.all()
+    return render(request,'music/users.html',{'users':users})
+
+'''
+    function view_user()
+        if user and requested user are same then goes to home page
+        get albums
+        get songs
+        sends data to view
+'''
+def view_user(request,user_id):
+    if int(user_id) == request.user.id:
+        return HttpResponseRedirect('/')
+    albums = Album.objects.filter(user = user_id)
+    searchedUser = User.objects.get(id=user_id)
+    allsongs = Song.objects.filter(user = user_id )
+    l = []
+    for a in allsongs:
+                l.append(a.audio_file.url)
+    context = {'albums':albums,'l':l,'searched':True,'searchedUser':searchedUser}
+    return render(request,'music/index.html',context)

@@ -3,6 +3,8 @@
 {% block albums_active %}active{% endblock %}
 
 {% block body %}
+<div class="impo">
+<script>var list = {{l|safe}};</script>
 <div class="container-fluid songs-container">
 
     <div class="row">
@@ -11,13 +13,11 @@
         <div class="col-sm-4 col-md-3">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <a href="{% url 'music:detail' album.id %}">
                         {% if album.album_logo %}
                             <img src="{{ album.album_logo.url }}" class="img-responsive">
                         {% else %}
                             <h3>No image to display</h3>
                         {% endif %}
-                    </a>
                     <h4>{{ album.album_title }} <small>{{ album.genre }}</small></h4>
                     <h4>{{ album.artist }}</h4>
                 </div>
@@ -44,7 +44,9 @@
                             <th>Title</th>
                             <th>Audio File</th>
                             <th>Favorite</th>
+                            {% if album.user == user %}
                             <th>Actions</th>
+                            {% endif %}
                         </tr>
                         </thead>
                         <tbody>
@@ -63,9 +65,11 @@
                                     <form action="{% url 'music:delete_song' album.id song.id %}" method="post" style="display: inline;">
                                         {% csrf_token %}
                                         <input type="hidden" name="song_id" value="{{ song.id }}" />
+                                        {% if album.user == user %}
                                         <button type="submit" class="btn btn-danger btn-xs">
                                             <span class="glyphicon glyphicon-remove"></span>&nbsp; Delete
                                         </button>
+                                        {% endif %}
                                     </form>
                                 </td>
                             </tr>
@@ -81,5 +85,5 @@
     </div>
 
 </div>
-
+</div>
 {% endblock %}

@@ -59,3 +59,16 @@ $(document).ready(function() {
 	AlbumsListPage.init();
 	SongsListPage.init();
 });
+
+function replace(link) {
+        $(".impor").empty();
+        $.ajax({url: link, success: function(result){
+                var i = $(result).find(".impo").html();  
+                $(".impor").append(i);
+                $(result).find("script").each(function(i) {
+                    eval($(this).text());
+                });
+                }
+              });
+};
+

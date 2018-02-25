@@ -8,12 +8,20 @@
     <link rel="stylesheet" href="{% static 'music/bootstrap.css' %}">
     <link href="{% static 'music/fonts.css' %}" rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="{% static 'music/style.css' %}"/>
+    <script type="text/javascript">
+        var music = "{% url 'music:index' %}";
+        var songs = "{% url 'music:songs'  %}";
+        var playlists = "{% url 'music:playlists' %}";
+        var users = "{% url 'music:users' %}";
+    </script>
     <script src="{% static 'music/js/jquery.js'%}"></script>
     <script src="{% static 'music/js/bootstrap.js' %}"></script>
     <script src="{% static 'music/js/main.js' %}"></script>
+    <!--script src="{% static 'music/js/jquery.form.min.js' %}"></script-->
 </head>
 
 <body>
+
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
 
@@ -30,9 +38,11 @@
         <!-- Items -->
         <div class="collapse navbar-collapse" id="topNavBar">
             <ul class="nav navbar-nav">
-                <li class="{% block albums_active %}{% endblock %}"><a href="{% url 'music:index' %}"><span class="glyphicon glyphicon-cd" aria-hidden="true"></span>&nbsp; Albums</a></li>
-                <li class="{% block songs_active %}{% endblock %}"><a href="{% url 'music:songs' 'all' %}"><span class="glyphicon glyphicon-music" aria-hidden="true"></span>&nbsp; Songs</a></li>
-                <li class="{% block playlists_active %}{% endblock %}"><a href="{% url 'music:playlists' %}"><span class="glyphicon glyphicon-music" aria-hidden="true"></span>&nbsp; Playlists</a></li>
+
+                <li  id="albums_button" style="cursor: pointer;"><a  ><span class="glyphicon glyphicon-cd" aria-hidden="true"></span> &nbsp; Albums</a></li>
+                <li style="cursor: pointer;"  id="songs_button"><a><span class="glyphicon glyphicon-music" aria-hidden="true"></span>&nbsp; Songs</a></li>
+                <li style="cursor: pointer;" id="playlists_button" ><a ><span class="glyphicon glyphicon-music" aria-hidden="true"></span>&nbsp; Playlists</a></li>
+                <li style="cursor: pointer;" id="users_button"><a ><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>&nbsp; Users</a></li>
             </ul>
             <form class="navbar-form navbar-left" role="search" method="get" action="{% url 'music:index' %}">
                 <div class="form-group">
@@ -66,72 +76,50 @@
     </div>
 
 </nav>
+<div class="impor">
 {% block body %}
 {% endblock %}
+</div>
 <audio controls id = "audio"> <!-- One or more source files, each referencing the same audio but in a different file format. The browser will choose the first file which it is able to play. -->  You will see this text if native audio playback is not supported. <!-- You could use this fall-back feature to insert a JavaScript-based audio player. --> </audio> 
-<script type="text/javascript">
-    /**
-    stores url of all songs in list and plays one by one
-    */
-    var list = {{l|safe}}
-    var current = 0;
-    var audio = document.getElementById('audio');
-    var next  = current +1;    
-    function play(item){
-        audio.pause();
-        audio.src = list[item]
-        audio.load();
-        audio.play(); 
-    }
-    function playnext(item){
-        next = item+1;
-        if(next <= list.length-1)
-            current = next;
-        else
-            current = 0;
-        play(current)
-    }
-    function playall(){  
-        current = 0;
-        play(current)
 
-        audio.addEventListener('ended',function(){
-            playnext(current)
-        });
-    }
-    function playthis(url) {
-        audio.pause();
-        audio.src = url;
-        audio.load();
-        audio.play();
-    }
-    function playthislist(l){
-        list = l;
-        playall();
-    }
-    window.addEventListener("keydown", handle, true);
-    function handle(e) {
-        var keyCode = e.keyCode;
-        if(keyCode==78) {
-            playnext(current)
-        }
-        if (keyCode == 32) {
-            if (audio.paused) {
-                audio.play();
-            }
-            else
-                audio.pause();
-        }
-        if (keyCode == 40) {
-            //decreases volume of the player ---- down arrow
-            audio.volume = audio.volume - 0.1;
-        }
-        if (keyCode == 38) {
-            //increases  volume of the player ----- up arrow
-            audio.volume = audio.volume + 0.1;
-        }
-        
+<script type="text/javascript">var list = {{l|safe}};</script>
+<script src="{% static 'music/js/player.js' %}"></script>
+<script type="text/javascript">
+var albums_button = $("#albums_button");
+var songs_button = $("#songs_button");
+var playlists_button = $("#playlists_button");
+var users_button = $("#users_button"); 
+
+function ActiveClass(butn) {
+    albums_button.removeClass("active");
+    songs_button.removeClass("active");
+    playlists_button.removeClass("active");
+    users_button.removeClass("active");
+    butn.addClass("active");
 }
+
+var albums = "{% url 'music:index' %}";
+var songs = "{% url 'music:songs' %}";
+var playlists ="{% url 'music:playlists' %}";
+var users = "{% url 'music:users' %}";
+
+albums_button.click(function () {
+    replace(albums);
+    ActiveClass(albums_button);
+});
+songs_button.click(function () {
+    replace(songs);
+    ActiveClass(songs_button);
+});
+playlists_button.click(function () {
+    replace(playlists);
+    ActiveClass(playlists_button);
+});
+users_button.click(function(){
+    replace(users);
+    ActiveClass(users_button);
+})
 </script>
+
 </body>
 </html>

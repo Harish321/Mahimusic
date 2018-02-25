@@ -10,7 +10,7 @@ urlpatterns = [
     url(r'^logout_user/$', views.logout_user, name='logout_user'),
     url(r'^(?P<album_id>[0-9]+)/$', views.detail, name='detail'),
     url(r'^(?P<song_id>[0-9]+)/favorite/$', views.favorite, name='favorite'),
-    url(r'^songs/(?P<filter_by>[a-zA_Z]+)/$', views.songs, name='songs'),
+    url(r'^songs/$', views.songs, name='songs'),
     #url(r'^create_album/$', views.create_album, name='create_album'),
     url(r'^create_song/$', views.create_song, name='create_song'),
     url(r'^(?P<album_id>[0-9]+)/delete_song/(?P<song_id>[0-9]+)/$', views.delete_song, name='delete_song'),
@@ -27,4 +27,6 @@ urlpatterns = [
     url(r'^deleteplaylist/(?P<playlist_id>[0-9]+)',views.delete_playlist,name = 'deleteplaylist'),
     url(r'^removeallsongsfromplaylist/(?P<playlist_id>[0-9]+)/(?P<typ>[0-9]+)',views.remove_allsongs_from_playlist,name = 'removeallsongsfromplaylist'),
     url(r'^renameplaylist/(?P<playlist_id>[0-9]+)',views.rename_playlist,name='rename_playlist'),
+    url(r'^users/',views.users,name='users'),
+    url(r'^viewuser/(?P<user_id>[0-9]+)',views.view_user,name = 'viewuser' ),
 ]
