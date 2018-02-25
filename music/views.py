@@ -251,21 +251,11 @@ def login_user(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                albums = Album.objects.filter(user=request.user)
-                allsongs  = Song.objects.filter(user=request.user)
-                l = givesongsurl(allsongs)
-                return render(request, 'music/index.html', {'albums': albums,'l':l})
+                return HttpResponseRedirect('/music/')
             else:
                 return render(request, 'music/login.html', {'error_message': 'Your account has been disabled'})
         else:
             return render(request, 'music/login.html', {'error_message': 'Invalid login'})
-    
-    #if refreshed then redirects to the same page
-    if request.user:
-        albums = Album.objects.filter(user=request.user)
-        allsongs  = Song.objects.filter(user=request.user)
-        l = givesongsurl(allsongs)
-        return render(request, 'music/index.html', {'albums': albums,'l':l})
     
     return render(request, 'music/login.html')
 
