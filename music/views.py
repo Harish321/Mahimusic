@@ -169,7 +169,7 @@ def detail(request, album_id):
             #without delete options
             album = get_object_or_404(Album,pk=album_id)
             albumUser = album.user
-            allsongs = Song.objects.filter(user=request.user,album=album_id)
+            allsongs = Song.objects.filter(user=albumUser,album=album_id)
             for a in allsongs:
                 l.append(a.audio_file.url)
             return render(request, 'music/detail.html', {'album': album, 'user': user, 'l':l, 'albumUser':albumUser})
