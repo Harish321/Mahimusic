@@ -1,8 +1,9 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404,redirect
+from django.shortcuts import render, get_object_or_404,redirect,render_to_response
 from django.db.models import Q
+from django.utils.datastructures import MultiValueDictKeyError
 from .forms import AlbumForm, SongForm, UserForm , PlaylistForm, RenamePlaylistForm
 from .models import Album, Song, Playlist, User
 from django.http import HttpResponseRedirect
@@ -44,6 +45,7 @@ def create_song(request):
     form = SongForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         files = request.FILES.getlist('audio_file')
+        print files
         for a in files:
             file = File(a)
             
@@ -122,11 +124,11 @@ def create_song(request):
             new_song = Song(user = request.user, album = Album.objects.get(album_title=file_album_name,user=request.user), song_title = song_title, audio_file = upload_url)
             new_song.save()
             
-        return HttpResponseRedirect('/') #redirects to the home page
+        return JsonResponse({'success':True}) #redirects to the home page
     context = {
         'form': form,
     }
-    return render(request, 'music/create_song.html', context)
+    return render(request,'music/create_song.html', context)
 
 
 def delete_album(request, album_id):
@@ -208,30 +210,14 @@ def index(request):
     if not request.user.is_authenticated():
         return render(request, 'music/login.html')
     else:
+        form = SongForm(request.POST or None, request.FILES or None)
         albums = Album.objects.filter(user=request.user)
         allsongs  = Song.objects.filter(user=request.user)
-        query = request.GET.get("q")
-        if query:
-            albums = albums.filter(
-                Q(album_title__icontains=query) |
-                Q(artist__icontains=query)
-            ).distinct()
-            song_results = allsongs.filter(
-                Q(song_title__icontains=query)
-            ).distinct()
-            l = []
-            l = givesongsurl(song_results)
-            return render(request, 'music/index.html', {
-                'albums': albums,
-                'songs': song_results,
-                'l':l,
-                'searched':False
-            })
-        else:
-            l = []
-            for a in allsongs:
-                l.append(a.audio_file.url)
-            return render(request, 'music/index.html', {'albums': albums,'l':l, 'searched':False})
+        l = []
+        for a in allsongs:
+            l.append(a.audio_file.url)
+        return render(request, 'music/index.html', {'albums': albums,'l':l,'form':form})
+
 
 
 def logout_user(request):
@@ -445,6 +431,7 @@ def rename_playlist(request,playlist_id):
         context = {'form':form,'old_name':currentPlaylist.playlist_title}
         return render(request,'music/rename_playlist.html',context)
 
+
 '''
     function users()
         gets the user objects
@@ -472,3 +459,38 @@ def view_user(request,user_id):
                 l.append(a.audio_file.url)
     context = {'albums':albums,'l':l,'searched':True,'searchedUser':searchedUser}
     return render(request,'music/index.html',context)
+
+def index2(request):
+    return render(request,'music/index2.html')
+
+def search(request):
+    if not request.user.is_authenticated():
+        return render(request, 'music/login.html')
+    else:
+        # form = SongForm(request.POST or None, request.FILES or None)
+        if request.method == "POST":
+            albums = Album.objects.filter(user=request.user)
+            allsongs  = Song.objects.filter(user=request.user)
+            try:
+                query = request.POST['search_text']
+            except MultiValueDictKeyError:
+                query = False
+            # query = request.GET['search_text']
+            print query
+            if query:
+                albums = albums.filter(
+                    Q(album_title__icontains=query) |
+                    Q(artist__icontains=query)
+                ).distinct()
+                song_results = allsongs.filter(
+                    Q(song_title__icontains=query)
+                ).distinct()
+                l = []
+                l = givesongsurl(song_results)
+                return render_to_response('music/index2.html', {
+                    'albums': albums,
+                    'songs': song_results,
+                    'l':l,
+                })
+            else:
+                return render_to_response('music/index2.html')

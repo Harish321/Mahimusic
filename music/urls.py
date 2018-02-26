@@ -29,4 +29,6 @@ urlpatterns = [
     url(r'^renameplaylist/(?P<playlist_id>[0-9]+)',views.rename_playlist,name='rename_playlist'),
     url(r'^users/',views.users,name='users'),
     url(r'^viewuser/(?P<user_id>[0-9]+)',views.view_user,name = 'viewuser' ),
+    url(r'^index2',views.index2,name='index2'),
+    url(r'^search',views.search,name ='search'),
 ]

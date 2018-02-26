@@ -1,0 +1,10 @@
+{% if albums.count > 0 %}
+<h4>Albums</h4>
+{% for album in albums %}
+    <li>
+        <a href="#"><h2>{{album}}</h2></a>
+    </li>
+{% endfor %}
+{%else%}
+    <p>Nothing to show</p>
+{% endif %}
