@@ -16,7 +16,7 @@
                         <div class="single_album">
                             <div class="album_logo">
                             {% url 'music:detail' album.id as link%}                                
-                                <img id="myimage" src="{{ album.album_logo.url }}" class="img-responsive" onclick="replace('{{link}}')" style="cursor: pointer;">
+                                <img id="myImage" src="{{ album.album_logo.url }}" class="img-responsive" onclick="replace('{{link}}')" style="cursor: pointer;">
                                 <span class="text-block">
                                     <h5>{{album.album_title}}</h5>
                                 </span>
