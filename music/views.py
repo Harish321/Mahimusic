@@ -487,10 +487,10 @@ def search(request):
                 ).distinct()
                 l = []
                 l = givesongsurl(song_results)
-                return render_to_response('music/index2.html', {
+                return render_to_response('music/search.html', {
                     'albums': albums,
                     'songs': song_results,
                     'l':l,
                 })
             else:
-                return render_to_response('music/index2.html')
+                return render_to_response('music/search.html')
