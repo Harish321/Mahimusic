@@ -81,7 +81,7 @@ function deletesong(deletelink,albumlink){
 	else 
 		replace homepage
 */
-}
+
 function deletesong(link,albumlink) {
 	$.ajax({
 		url:link,
