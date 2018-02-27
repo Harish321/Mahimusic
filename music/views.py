@@ -122,8 +122,8 @@ def delete_song(request, album_id, song_id):
     remove_song(request.user.pk,album.album_title,song.song_title)
     deleted = if_no_songs_delete_folder(request.user.pk,album.album_title,album)
     if deleted:
-        return HttpResponseRedirect('/')
-    return render(request, 'music/detail.html', {'album': album})
+        return JsonResponse({'album':False})
+    return JsonResponse({'album':True})
 
 
 def detail(request, album_id):

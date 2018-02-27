@@ -72,3 +72,24 @@ function replace(link) {
               });
 };
 
+
+/*
+function deletesong(deletelink,albumlink){
+	deletesong;
+	if album exist
+		replace the album
+	else 
+		replace homepage
+*/
+}
+function deletesong(link,albumlink) {
+	$.ajax({
+		url:link,
+		success:function (result) {
+			if(result.album == true)
+				replace(albumlink);
+			else
+				replace(albums);
+		},
+	})
+}

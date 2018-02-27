@@ -62,15 +62,13 @@
                                     <a href="{% url 'music:favorite' song.id %}" class="btn-favorite"><span class="glyphicon glyphicon-star {% if song.is_favorite %}active{% endif %}"></span></a>
                                 </td>
                                 <td>
-                                    <form action="{% url 'music:delete_song' album.id song.id %}" method="post" style="display: inline;">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="song_id" value="{{ song.id }}" />
                                         {% if album.user == user %}
-                                        <button type="submit" class="btn btn-danger btn-xs">
+                                        {%  url 'music:delete_song' album.id song.id as link %}
+                                        {% url 'music:detail' album.id as albumlink %}
+                                        <button id="deletesong" onclick="deletesong('{{link}}','{{albumlink}}')" type="submit" class="btn btn-danger btn-xs">
                                             <span class="glyphicon glyphicon-remove"></span>&nbsp; Delete
                                         </button>
                                         {% endif %}
-                                    </form>
                                 </td>
                             </tr>
                         {% endfor %}
