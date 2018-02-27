@@ -15,7 +15,7 @@ $(function(){
     // Ajax call for add_song modal //
     $('#addsong').click(function(){
         $.ajax({
-            type: "POST",
+            type: "GET",
             url: "/music/create_song/",
             data:{
                 'csrfmiddlewaretoken':$("input[name=csrfmiddlewaretoken]").val()
