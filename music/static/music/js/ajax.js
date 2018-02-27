@@ -17,11 +17,18 @@ $(function(){
         $.ajax({
             type: "GET",
             url: "/music/create_song/",
-            data:{
-                'csrfmiddlewaretoken':$("input[name=csrfmiddlewaretoken]").val()
-            },
-            success: addsongSuccess,
+            success: putmodal,
             dataType: 'html'
+        })
+    })
+
+    // Ajax call for add_playlist modal
+    $('#addplaylist').click(function () {
+        $.ajax({
+            type : "GET",
+            url :"/music/create_playlist/",
+            success: putmodal,
+            dataType:'html'
         })
     })
     // Ajax call for add song to database//
@@ -50,6 +57,18 @@ $(function(){
         }
     });
 
+    //submits form;
+    //removes modal;
+    //replace playlists page;
+    $('#playlistform').ajaxForm({
+        url:"/music/create_playlist/",
+        type:'POST',
+        complete:function() {
+            $('#myModal').css('display','none');
+            replace(playlists);
+        }
+    });
+
 });
 
 function searchSuccess(data,textStatus,jqXHR){
@@ -60,10 +79,9 @@ function searchSuccess(data,textStatus,jqXHR){
     }
 }
 
-function addsongSuccess(data,textStatus,jqXHR){
+function putmodal(data,textStatus,jqXHR){
     $('#myModalcontent').html(data);
 }
-
 function addsongdbSuccess(data,textStatus,jqXHR){
     $('#myModal').css('display','none');
 }

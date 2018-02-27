@@ -6,41 +6,13 @@ from django.db.models import Q
 from django.utils.datastructures import MultiValueDictKeyError
 from .forms import AlbumForm, SongForm, UserForm , PlaylistForm, RenamePlaylistForm
 from .models import Album, Song, Playlist, User
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,HttpResponse
 import os, sys
 import shutil
 AUDIO_FILE_TYPES = ['wav', 'mp3', 'ogg']
 IMAGE_FILE_TYPES = ['png', 'jpg', 'jpeg']
 from mutagen import *
-'''def create_album(request):
-    if not request.user.is_authenticated():
-        return render(request, 'music/login.html')
-    else:
-        form = AlbumForm(request.POST or None, request.FILES or None)
-        if form.is_valid():
-            album = form.save(commit=False)
-            album.user = request.user
-            album.album_logo = request.FILES['album_logo']
-            file_type = album.album_logo.url.split('.')[-1]
-            file_type = file_type.lower()
-            if file_type not in IMAGE_FILE_TYPES:
-                context = {
-                    'album': album,
-                    'form': form,
-                    'error_message': 'Image file must be PNG, JPG, or JPEG',
-                }
-                return render(request, 'music/create_album.html', context)
-            album.save()
-            return render(request, 'music/detail.html', {'album': album})
-        context = {
-            "form": form,
-        }
-        return render(request, 'music/create_album.html', context)
 
-
-files variable stores all the uploaded files.
-
-'''
 def create_song(request):
     form = SongForm(request.POST or None, request.FILES or None)
     if form.is_valid():
@@ -317,7 +289,7 @@ def create_playlist(request):
                 newPlaylist = Playlist(  playlist_title = title)
                 newPlaylist.user = request.user
                 newPlaylist.save()
-                return redirect('/music/playlist/'+str(newPlaylist.id))
+                return HttpResponse('')
             else :
                 context = {
                     'form':form,

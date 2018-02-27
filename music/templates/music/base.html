@@ -62,10 +62,10 @@
                     <a id="play all" href="#" onclick="playall();return false;"><span class="glyphicon glyphicon-music" aria-hidden="true"></span>&nbsp; Play All</a>
                 </li>
                 <li>
-                    <a id="addsong" href="#" onclick="addsong();return false;"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp; Add Songs</a>
+                    <a id="addsong" href="#" onclick="startmodal();return false;"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp; Add Songs</a>
                 </li>
                 <li>
-                    <a href="{% url 'music:create_playlist' %}">
+                    <a id="addplaylist" href="#" onclick="startmodal();return false;">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp; Create Playlist
                     </a>
                 </li>
@@ -80,10 +80,7 @@
             <div class="modal-content">
                 <span class="close">&times;</span>
                 <div class="inside-modal" id="myModalcontent"></div>
-                <div class="progress">
-                    <div class="bar"></div >
-                    <div class="percent">0%</div >
-                </div>
+                
             </div>
             <div id="status"></div>
         </div>
@@ -139,11 +136,10 @@ users_button.click(function(){
         modal.style.display = "none";
     }
 
-    function addsong(){
+    function startmodal(){
         var modal = document.getElementById('myModal');
         modal.style.display = "block";
     }
-
     window.onclick = function(event) {
         if (event.target == modal) {
             modal.style.display = "none";
