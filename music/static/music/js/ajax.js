@@ -45,9 +45,11 @@ $(function(){
         complete: function(xhr) {
             status.html(xhr.responseText);
             addsongdbSuccess();
+            replace(albums);
+
         }
-    })
-    
+    });
+
 });
 
 function searchSuccess(data,textStatus,jqXHR){
