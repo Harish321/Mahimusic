@@ -35,6 +35,8 @@ $(function(){
     var bar = $('.bar');
     var percent = $('.percent');
     var status = $('#status');
+    var progress = $('.progress');
+
     $('#songfile').ajaxForm({
         url:"/music/create_song/",
         type:'POST',
@@ -46,7 +48,7 @@ $(function(){
         },
         uploadProgress: function(event, position, total, percentComplete) {
             var percentVal = percentComplete + '%';
-            bar.width(percentVal);
+            progress.width(percentVal);
             percent.html(percentVal);
         },
         complete: function(xhr) {
