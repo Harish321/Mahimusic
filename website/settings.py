@@ -14,6 +14,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework',
     'music.apps.MusicConfig',
     'django.contrib.admin',
     'django.contrib.auth',
