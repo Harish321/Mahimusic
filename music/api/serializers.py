@@ -5,13 +5,15 @@ class SongSerializer(serializers.ModelSerializer):
         model = Song
         fields = [
             'song_title',
-            'album'
+            'album',
+            'audio_file'
         ]
 
 class AlbumSerializer(serializers.ModelSerializer):
     class Meta():
         model = Album
         fields = [
+            'id',
             'album_title',
             'album_logo'
         ]
