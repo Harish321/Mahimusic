@@ -11,6 +11,9 @@
             {{artwork}}
             {% if albums %}
             <div class = "maindiv">
+                {%if searched%}
+                <center><h2 style="center">{{searchedUser}}'s Mahi</h2></center>
+                {% endif %}
                 <div class = "album_containers">       
                     <div class = "albums_m">
                     {% for album in albums %}
@@ -22,12 +25,14 @@
                                     <h5>{{album.album_title}}</h5>
                                     
                                 </span>
+                                {%if not searched%}
                                 {% if album.id in useralbums %}
                                 <h5>got</h5>
                                 {%else%}
                                 {% url 'music:addgivenalbum' album.id as link1%}
                                 {% url 'music:index'  as link2%}                                
                                 <h5 onclick="addalbumscript('{{link1}}','{{link2}}')">get</h5>
+                                {%endif%}
                                 {%endif%}
                             </div>                       
                         </div>

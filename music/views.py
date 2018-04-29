@@ -141,6 +141,7 @@ def favorite_album(request, album_id):
 
 
 def index(request):
+
     if not request.user.is_authenticated():
         return render(request, 'music/login.html')
     else:
@@ -148,7 +149,7 @@ def index(request):
         albums = Album.objects.all()
         songstoplay = givesongsurl(Song.objects.all())
         useralbums =  Album.objects.filter(id__in = UserAlbum.objects.filter(user=request.user).values_list('album',flat=True)).values_list('id',flat=True)
-        return render(request, 'music/index.html', {'albums': albums,'form':form,'useralbums':useralbums,'songstoplay':songstoplay})
+        return render(request, 'music/index.html', {'albums': albums,'searched':False,'form':form,'useralbums':useralbums,'songstoplay':songstoplay})
 
 
 
@@ -370,21 +371,19 @@ def users(request):
 
 '''
     function view_user()
-        if user and requested user are same then goes to home page
         get albums
         get songs
         sends data to view
 '''
 def view_user(request,user_id):
-    if int(user_id) == request.user.id:
-        return HttpResponseRedirect('/')
-    albums = Album.objects.filter(user = user_id)
     searchedUser = User.objects.get(id=user_id)
-    allsongs = Song.objects.filter(user = user_id )
-    l = []
-    for a in allsongs:
-                l.append(a.audio_file.url)
-    context = {'albums':albums,'l':l,'searched':True,'searchedUser':searchedUser}
+    albums = Album.objects.filter(id__in = UserAlbum.objects.filter(user=searchedUser).values_list('album__id',flat=True))
+    print albums
+    songstoplay=[]
+    for album in albums:
+        for song in Song.objects.filter(album=album):
+            songstoplay.append(song.audio_file.url)
+    context = {'albums':albums,'songstoplay':songstoplay,'searched':True,'searchedUser':searchedUser}
     return render(request,'music/index.html',context)
 
 def index2(request):

@@ -12,7 +12,9 @@
                 {{artwork}}
                 {% if albums %}
                 <div class = "maindiv">
-                    <div class = "album_containers">       
+                    <div class = "album_containers"> 
+                            <h3>Your Albums</h3>
+      
                         <div class = "albums_m">
                         {% for album in albums %}
                             <div class="single_album">
@@ -27,7 +29,7 @@
                                 <!--a href="{% url 'music:removegivenalbum' album.id %}">Remove</a-->
                                 {% url 'music:removegivenalbum' album.id as link1%}
                                 {% url 'music:myalbums'  as link2%}                                
-                                <h5 onclick="addalbumscript('{{link1}}','{{link2}}')">get</h5>
+                                <h5 onclick="addalbumscript('{{link1}}','{{link2}}')">Remove</h5>
                             </div>
                             {% cycle '' '' '' '' '' '' %}
                         {% endfor %}
