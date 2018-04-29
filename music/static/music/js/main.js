@@ -72,7 +72,20 @@ function replace(link) {
               });
 };
 
-
+function addalbumscript(addlink,refreshlink){
+	 $.ajax({
+		url: addlink,
+	  }).then(()=>{$(".impor").empty();
+	  $.ajax({url: refreshlink, success: function(result){
+		var i = $(result).find(".impo").html();  
+		$(".impor").append(i);
+		$(result).find("script").each(function(i) {
+			eval($(this).text());
+		});
+		}
+	  })})
+	  ; 
+}
 /*
 function deletesong(deletelink,albumlink){
 	deletesong;

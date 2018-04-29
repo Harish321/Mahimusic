@@ -10,9 +10,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'music/style.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'music/bootstrap.css' %}"/>    
     <script type="text/javascript">
-        var music = "{% url 'music:index' %}";
-        var songs = "{% url 'music:songs'  %}";
-        var playlists = "{% url 'music:playlists' %}";
+        var music = "{% url 'music:myalbums' %}";
         var users = "{% url 'music:users' %}";
     </script>
     <script src="{% static 'music/js/jquery.js'%}"></script>
@@ -35,15 +33,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{% url 'music:index' %}">Mahimusic</a>
+                <a class="navbar-brand" style="cursor: pointer;"  id="home_button">Mahimusic</a>
             </div>
         <!-- Items -->
         <div class="collapse navbar-collapse" id="topNavBar">
             <ul class="nav navbar-nav">
 
                 <li  id="albums_button" style="cursor: pointer;"><a  ><span class="glyphicon glyphicon-cd" aria-hidden="true"></span> &nbsp; Albums</a></li>
-                <li style="cursor: pointer;"  id="songs_button"><a><span class="glyphicon glyphicon-music" aria-hidden="true"></span>&nbsp; Songs</a></li>
-                <li style="cursor: pointer;" id="playlists_button" ><a ><span class="glyphicon glyphicon-music" aria-hidden="true"></span>&nbsp; Playlists</a></li>
                 <li style="cursor: pointer;" id="users_button"><a ><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>&nbsp; Users</a></li>
             </ul>
             <ul class="dropdown">
@@ -64,11 +60,7 @@
                 <li>
                     <a id="addsong" href="#" onclick="startmodal();return false;"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp; Add Songs</a>
                 </li>
-                <li>
-                    <a id="addplaylist" href="#" onclick="startmodal();return false;">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp; Create Playlist
-                    </a>
-                </li>
+                
                 <li>
                     <a href="{% url 'music:logout_user' %}">
                         <span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp; Logout
@@ -92,39 +84,31 @@
 </div>
 <audio controls id = "audio"> <!-- One or more source files, each referencing the same audio but in a different file format. The browser will choose the first file which it is able to play. -->  You will see this text if native audio playback is not supported. <!-- You could use this fall-back feature to insert a JavaScript-based audio player. --> </audio> 
 
-<script type="text/javascript">var list = {{l|safe}};</script>
+<script type="text/javascript">var listbuffer = {{songstoplay|safe}};</script>
 <script src="{% static 'music/js/player.js' %}"></script>
 <script type="text/javascript">
 var albums_button = $("#albums_button");
-var songs_button = $("#songs_button");
-var playlists_button = $("#playlists_button");
 var users_button = $("#users_button"); 
+var home_button = $("#home_button");
 
 function ActiveClass(butn) {
     albums_button.removeClass("active");
-    songs_button.removeClass("active");
-    playlists_button.removeClass("active");
     users_button.removeClass("active");
     butn.addClass("active");
 }
-
-var albums = "{% url 'music:index' %}";
-var songs = "{% url 'music:songs' %}";
-var playlists ="{% url 'music:playlists' %}";
+var home = "{% url 'music:index' %}";
+var albums = "{% url 'music:myalbums' %}";
 var users = "{% url 'music:users' %}";
-
+home_button.click(function(){
+    replace(home);
+    ActiveClass(home_button);
+});
 albums_button.click(function () {
     replace(albums);
     ActiveClass(albums_button);
 });
-songs_button.click(function () {
-    replace(songs);
-    ActiveClass(songs_button);
-});
-playlists_button.click(function () {
-    replace(playlists);
-    ActiveClass(playlists_button);
-});
+
+
 users_button.click(function(){
     replace(users);
     ActiveClass(users_button);

@@ -31,4 +31,8 @@ urlpatterns = [
     url(r'^viewuser/(?P<user_id>[0-9]+)',views.view_user,name = 'viewuser' ),
     url(r'^index2',views.index2,name='index2'),
     url(r'^search',views.search,name ='search'),
+    url(r'^addalbums',views.addAlbums,name = 'addalbums'),
+    url(r'^addgivenalbum/(?P<album_id>[0-9]+)',views.addGivenAlbum,name='addgivenalbum'),
+    url(r'^myalbums',views.myAlbums,name = "myalbums"),
+    url(r'^removegivenalbum/(?P<album_id>[0-9]+)',views.removeGivenAlbum,name="removegivenalbum")
 ]

@@ -1,7 +1,7 @@
     /**
     stores url of all songs in list and plays one by one
     */
-    //var list;
+    var list=[]
     var current = 0;
     var audio = document.getElementById('audio');
     var next  = current +1;    
@@ -19,7 +19,8 @@
             current = 0;
         play(current)
     }
-    function playall(){  
+    function playall(){ 
+        list = listbuffer;
         current = 0;
         play(current)
 

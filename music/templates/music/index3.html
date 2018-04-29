@@ -1,19 +1,35 @@
-<html lang="en">
-<head>
-    .main_div{
-        
-    }
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
-</html>
+{% extends 'music/base.html' %}
 
-
-
-
+{% block body %}
+<div class="impo">
+<div class="albums-container container-fluid">
+    <!-- Albums -->
+    <div class="row">
+        <div class="col-sm-12">
+            {{artwork}}
+            {% if albums %}
+            <div class = "maindiv">
+                <div class = "album_containers">       
+                    <div class = "albums_m">
+                    {% for album in albums %}
+                        <div class="single_album">
+                            <div class="album_logo">
+                            {% url 'music:detail' album.id as link%}                                
+                                <img id="myImage" src="{{ album.album_logo.url }}" class="img-responsive" onclick="replace('{{link}}')" style="cursor: pointer;">
+                                <span class="text-block">
+                                    <h5>{{album.album_title}}</h5>
+                                </span>
+                            </div>                       
+                        </div>
+                        {% cycle '' '' '' '' '' '' %}
+                    {% endfor %}
+                    </div>
+                </div>
+            </div>    
+            {% endif %}            
+        </div>   
+    </div>
+</div>
+</div>
+{% endblock %}
 

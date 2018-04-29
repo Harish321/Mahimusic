@@ -38,3 +38,10 @@ class Playlist(models.Model):
     playlist_title  = models.CharField(max_length=10)
     playlist_songs = models.ManyToManyField(Song)
 
+'''
+    This model is for user and his album interests
+'''
+class UserAlbum(models.Model):
+    user = models.ForeignKey(User,default = 1)
+    album = models.ForeignKey(Album, default = 1) 
+

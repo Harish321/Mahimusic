@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404,redirect,render_to_respon
 from django.db.models import Q
 from django.utils.datastructures import MultiValueDictKeyError
 from .forms import AlbumForm, SongForm, UserForm , PlaylistForm, RenamePlaylistForm
-from .models import Album, Song, Playlist, User
+from .models import Album, Song, Playlist, User, UserAlbum
 from django.http import HttpResponseRedirect,HttpResponse
 import os, sys
 import shutil
@@ -44,27 +44,10 @@ def create_song(request):
                 file_album_name='Unknown'
             
             '''If album is created for the first time'''
-            if not Album.objects.filter(album_title=file_album_name,user=request.user):
-                '''
-                The below if condition takes care of first time upload
-                i.e
-                If there is no folder for the new user then it creates one
-                '''
-
-                if not os.path.exists('media/'+str(request.user.pk)):
-                    os.makedirs('media/'+str(request.user.pk))
-            
-
-                '''new folder for the album is created'''
-                if not os.path.exists(('media/'+str(request.user.pk)+'/'+str(file_album_name))):
-                    os.makedirs('media/'+str(request.user.pk)+'/'+str(file_album_name))
-            
-
-                '''creates a thumbnail for the album'''
-                filename='default.jpg'#default image
+            if not Album.objects.filter(album_title=file_album_name):
                 if 'APIC:' in file:
                     artwork = file.tags['APIC:'].data
-                    filename='media/'+str(request.user.pk)+'/'+str(file_album_name)+'/'+str(file_album_name)+'.jpg'
+                    filename='media/albums/'+str(file_album_name)+'.jpg'
                     with open(filename, 'wb+') as img:
                         img.write(artwork) # write artwork to new image
                         
@@ -74,28 +57,20 @@ def create_song(request):
                         filename='default.jpg'
                     else:
                         '''The below file name stores address .../..../media/filename'''
-                        filename=str(request.user.pk)+'/'+str(file_album_name)+'/'+str(file_album_name)+'.jpg'
+                        filename="albums/"+str(file_album_name)+'.jpg'
 
                 new=Album(album_title=file_album_name,user=request.user,album_logo=filename)
                 new.save()
-                '''If the album exists then below else statement checks if the uploaded is duplicate song or not'''
             else:
-                if Song.objects.filter(user=request.user,album__album_title=file_album_name,song_title=file_name):
-                    context = {
-                        'form': form,
-                        'error_message': 'You already added that song',
-                    }
-                    return render(request, 'music/create_song.html', context)
-            
-            '''save the uploaded files to the file system and insert into database'''
-            song_title=file_name
-            with open(str("media/"+str(request.user.pk)+"/"+str(file_album_name)+"/"+str(song_title)+".mp3"), 'wb+') as destination:
-                for chunk in a.chunks():
-                    destination.write(chunk)
-            upload_url = str(request.user.pk)+"/"+str(file_album_name)+"/"+str(song_title)+".mp3"
-            new_song = Song(user = request.user, album = Album.objects.get(album_title=file_album_name,user=request.user), song_title = song_title, audio_file = upload_url)
-            new_song.save()
-            
+                if not Song.objects.filter(album__album_title=file_album_name,song_title=file_name).exists():
+                    '''save the uploaded files to the file system and insert into database'''
+                    song_title=file_name
+                    with open(str("media/songs/"+str(song_title)+".mp3"), 'wb+') as destination:
+                        for chunk in a.chunks():
+                            destination.write(chunk)
+                    upload_url = "songs/"+str(song_title)+".mp3"
+                    new_song = Song(user = request.user, album = Album.objects.get(album_title=file_album_name), song_title = song_title, audio_file = upload_url)
+                    new_song.save()  
         return JsonResponse({'success':True}) #redirects to the home page
     context = {
         'form': form,
@@ -132,22 +107,9 @@ def detail(request, album_id):
     else:
         user = request.user
         l=[]
-        try:
-            album = get_object_or_404(Album, pk=album_id,user = user)
-            allsongs  = Song.objects.filter(user=request.user,album=album_id)
-            for a in allsongs:
-                l.append(a.audio_file.url)
-
-        except:
-            #if the requested album is not uploaded by the user then it redirects to the album page 
-            #without delete options
-            album = get_object_or_404(Album,pk=album_id)
-            albumUser = album.user
-            allsongs = Song.objects.filter(user=albumUser,album=album_id)
-            for a in allsongs:
-                l.append(a.audio_file.url)
-            return render(request, 'music/detail.html', {'album': album, 'user': user, 'l':l, 'albumUser':albumUser})
-        return render(request, 'music/detail.html', {'album': album, 'user': user, 'l':l})
+        album = get_object_or_404(Album, pk=album_id)
+        songstoplay  = givesongsurl( Song.objects.filter(album=album_id))
+        return render(request, 'music/detail.html', {'album': album, 'user': user, 'songstoplay':songstoplay})
 
 
 def favorite(request, song_id):
@@ -183,12 +145,10 @@ def index(request):
         return render(request, 'music/login.html')
     else:
         form = SongForm(request.POST or None, request.FILES or None)
-        albums = Album.objects.filter(user=request.user)
-        allsongs  = Song.objects.filter(user=request.user)
-        l = []
-        for a in allsongs:
-            l.append(a.audio_file.url)
-        return render(request, 'music/index.html', {'albums': albums,'l':l,'form':form})
+        albums = Album.objects.all()
+        songstoplay = givesongsurl(Song.objects.all())
+        useralbums =  Album.objects.filter(id__in = UserAlbum.objects.filter(user=request.user).values_list('album',flat=True)).values_list('id',flat=True)
+        return render(request, 'music/index.html', {'albums': albums,'form':form,'useralbums':useralbums,'songstoplay':songstoplay})
 
 
 
@@ -248,18 +208,13 @@ def songs(request):
         return render(request, 'music/login.html')
     else:
         try:
-            song_ids = []
-            for album in Album.objects.filter(user=request.user):
-                for song in album.song_set.all():
-                    song_ids.append(song.pk)
-            users_songs = Song.objects.filter(pk__in=song_ids)
-            l = givesongsurl(users_songs)
+            users_songs = Song.objects.all()
+            #l = givesongsurl(users_songs)
             
-        except Album.DoesNotExist:
+        except Song.DoesNotExist:
             users_songs = []
         return render(request, 'music/songs.html', {
             'song_list': users_songs,
-            'l':l
         })
 
 '''
@@ -466,3 +421,53 @@ def search(request):
                 })
             else:
                 return render_to_response('music/search.html')
+
+'''
+def addgivenalbum(request,album_id)
+    if not user has album:
+        create useralbum
+    redirect to addalbums
+'''
+def addGivenAlbum(request,album_id):
+    album = Album.objects.get(id=album_id)
+    if not UserAlbum.objects.filter(user=request.user,album=album).exists():
+       new = UserAlbum(user=request.user,album = album)
+       new.save()
+    return JsonResponse({'success': True})
+    #return redirect('/music/addalbums')
+
+'''
+def addAlbums(request):
+    useralbums = albums not in user list
+    return addalbums.html
+'''
+def addAlbums(request):
+    useralbums = Album.objects.all().exclude(id__in=UserAlbum.objects.filter(user=request.user).values_list('album',flat=True))
+    context = {'albums':useralbums}
+    return render(request,'music/addalbums.html',context)
+
+'''
+def removeGivenAlbum(request,album_id):
+    if user has album:
+        delete the album from his albums
+    return to myalbums
+'''
+def removeGivenAlbum(request,album_id):
+    album = Album.objects.get(id=album_id)
+    if UserAlbum.objects.filter(user=request.user,album=album).exists():
+        UserAlbum.objects.filter(user=request.user,album=album).delete()
+    return JsonResponse({'success': True})
+
+'''
+def myAlbums(request):
+    albums = user.albums
+    return myalbums.html context
+'''
+def myAlbums(request):
+    albums =  Album.objects.filter(id__in = UserAlbum.objects.filter(user=request.user).values_list('album',flat=True))
+    songstoplay=[]
+    for album in albums:
+        for song in Song.objects.filter(album=album):
+            songstoplay.append(song.audio_file.url)
+    context = {'albums':albums,'songstoplay':songstoplay}
+    return render(request,'music/myalbums.html',context)

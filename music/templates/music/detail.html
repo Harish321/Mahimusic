@@ -3,8 +3,9 @@
 {% block albums_active %}active{% endblock %}
 
 {% block body %}
+
 <div class="impo">
-<script>var list = {{l|safe}};</script>
+<script type="text/javascript">var listbuffer ={{songstoplay|safe}};</script>
 <div class="container-fluid songs-container">
 
     <div class="row">
@@ -18,7 +19,7 @@
                         {% else %}
                             <h3>No image to display</h3>
                         {% endif %}
-                    <h4>{{ album.album_title }} <small>{{ album.genre }}</small></h4>
+                    <h4>{{ album.album_title }} idera<small>{{ album.genre }}</small></h4>
                     <h4>{{ album.artist }}</h4>
                 </div>
             </div>

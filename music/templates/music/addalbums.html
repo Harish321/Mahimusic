@@ -1,0 +1,9 @@
+{% extends 'music/base.html' %}
+{% block title %}ADD SONGS{% endblock %}
+
+{% block body %}
+    {% for album in albums %}
+    <p>{{album.album_title}}</p>
+    <a href="{% url 'music:addgivenalbum' album.id %}">add</a>
+    {%endfor%}
+{% endblock %}
