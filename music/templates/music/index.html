@@ -25,16 +25,16 @@
                                     <h5>{{album.album_title}}</h5>
                                     
                                 </span>
-                                {%if not searched%}
+                                <object class="playalbum" onclick="playthisalbum('{{album.id}}')"><span style="cursor: pointer;font-size:50px;color:red" class="glyphicon glyphicon-play" aria-hidden="true"></span></object>                            
+                            </div>
+                            {%if not searched%}
                                 {% if album.id in useralbums %}
-                                <h5>got</h5>
+                                <button type="button" class="btn btn-success">Grabbed</button>
                                 {%else%}
                                 {% url 'music:addgivenalbum' album.id as link1%}
                                 {% url 'music:index'  as link2%}                                
-                                <h5 onclick="addalbumscript('{{link1}}','{{link2}}')">get</h5>
-                                {%endif%}
-                                {%endif%}
-                            </div>                       
+                                <button type="button" class="btn btn-info" onclick="addalbumscript('{{link1}}','{{link2}}')">Grabit</button>                                {%endif%}
+                                {%endif%}                       
                         </div>
                         {% cycle '' '' '' '' '' '' %}
                     {% endfor %}

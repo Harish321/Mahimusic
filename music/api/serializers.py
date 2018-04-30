@@ -17,3 +17,8 @@ class AlbumSerializer(serializers.ModelSerializer):
             'album_title',
             'album_logo'
         ]
+
+class SongUrlSerializer(serializers.ModelSerializer):
+    class  Meta():
+        model = Song
+        fields = ['audio_file']

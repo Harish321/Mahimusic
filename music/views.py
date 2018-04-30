@@ -402,7 +402,6 @@ def search(request):
             except MultiValueDictKeyError:
                 query = False
             # query = request.GET['search_text']
-            print query
             if query:
                 albums = albums.filter(
                     Q(album_title__icontains=query) |

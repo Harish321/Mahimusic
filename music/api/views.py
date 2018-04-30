@@ -1,4 +1,4 @@
-from serializers import AlbumSerializer,SongSerializer
+from serializers import AlbumSerializer,SongSerializer,SongUrlSerializer
 from rest_framework import generics
 from music.models import Song,Album
 from rest_framework import viewsets
@@ -15,5 +15,9 @@ class AlbumView(generics.RetrieveAPIView):
         return  Album.objects.all()
 class SongsView(generics.ListAPIView):
     serializer_class = SongSerializer
+    def get_queryset(self):
+        return Song.objects.filter(album=self.kwargs['album_id'])
+class SongsUrlView(generics.ListAPIView):
+    serializer_class = SongUrlSerializer
     def get_queryset(self):
         return Song.objects.filter(album=self.kwargs['album_id'])

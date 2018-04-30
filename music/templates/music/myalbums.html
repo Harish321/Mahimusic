@@ -22,14 +22,14 @@
                                 {% url 'music:detail' album.id as link%}                                
                                     <img id="myImage" src="{{ album.album_logo.url }}" class="img-responsive" onclick="replace('{{link}}')" style="cursor: pointer;">
                                     <span class="text-block">
-                                        <h5>{{album.album_title}}</h5>
-                                        
+                                        <h5>{{album.album_title}}</h5>   
                                     </span>
+                                    <object class="playalbum" onclick="playthisalbum('{{album.id}}')"><span style="cursor: pointer;font-size:50px;color:red" class="glyphicon glyphicon-play" aria-hidden="true"></span></object>                                    
                                 </div> 
                                 <!--a href="{% url 'music:removegivenalbum' album.id %}">Remove</a-->
                                 {% url 'music:removegivenalbum' album.id as link1%}
                                 {% url 'music:myalbums'  as link2%}                                
-                                <h5 onclick="addalbumscript('{{link1}}','{{link2}}')">Remove</h5>
+                                <button type="button" class="btn btn-warning" onclick="addalbumscript('{{link1}}','{{link2}}')">Remove</button>
                             </div>
                             {% cycle '' '' '' '' '' '' %}
                         {% endfor %}

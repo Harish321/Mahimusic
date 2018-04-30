@@ -36,7 +36,8 @@
     }
     function playthislist(l){
         list = l;
-        playall();
+        current = 0;
+        play(current);
     }
     window.addEventListener("keydown", handle, true);
     function handle(e) {

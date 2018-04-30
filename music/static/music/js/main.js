@@ -106,3 +106,14 @@ function deletesong(link,albumlink) {
 		},
 	})
 }
+function playthisalbum(albumid){
+	$.ajax({
+		url:'/api/songsurl/'+albumid+'/?format=json',
+		success:function(result){
+			var array = $.map(result, function(value, index) {
+				return [value.audio_file];
+			});
+			playthislist(array);
+		}
+	});
+}
