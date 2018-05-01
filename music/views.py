@@ -17,7 +17,6 @@ def create_song(request):
     form = SongForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         files = request.FILES.getlist('audio_file')
-        print files
         for a in files:
             file = File(a)
             
@@ -104,9 +103,6 @@ def delete_song(request, album_id, song_id):
 
 
 def detail(request, album_id):
-    if not request.user.is_authenticated():
-        return render(request, 'music/login.html')
-    else:
         user = request.user
         l=[]
         album = get_object_or_404(Album, pk=album_id)
@@ -143,15 +139,16 @@ def favorite_album(request, album_id):
 
 
 def index(request):
-
-    if not request.user.is_authenticated():
-        return render(request, 'music/login.html')
-    else:
+    albums = Album.objects.all()
+    songstoplay = givesongsurl(Song.objects.all())
+    context = {'albums': albums,'songstoplay': songstoplay,'searched':False}
+    if  request.user.is_authenticated():
         form = SongForm(request.POST or None, request.FILES or None)
-        albums = Album.objects.all()
-        songstoplay = givesongsurl(Song.objects.all())
         useralbums =  Album.objects.filter(id__in = UserAlbum.objects.filter(user=request.user).values_list('album',flat=True)).values_list('id',flat=True)
-        return render(request, 'music/index.html', {'albums': albums,'searched':False,'form':form,'useralbums':useralbums,'songstoplay':songstoplay})
+        context['form'] = form
+        context['searched'] = False
+        context['useralbums'] = useralbums
+    return render(request, 'music/index.html', context)
 
 
 

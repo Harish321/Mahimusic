@@ -27,7 +27,7 @@
                                 </span>
                                 <object class="playalbum" onclick="playthisalbum('{{album.id}}')"><span style="cursor: pointer;font-size:50px;color:red" class="glyphicon glyphicon-play" aria-hidden="true"></span></object>                            
                             </div>
-                            {%if not searched%}
+                            {%if not searched and request.user.id%}
                                 {% if album.id in useralbums %}
                                 <button type="button" class="btn btn-success">Grabbed</button>
                                 {%else%}
