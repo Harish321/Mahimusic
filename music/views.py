@@ -60,18 +60,18 @@ def create_song(request):
 
                 new=Album(album_title=file_album_name,user=request.user,album_logo=filename)
                 new.save()
-            else:
-                if not Song.objects.filter(album__album_title=file_album_name,song_title=file_name).exists():
-                    '''save the uploaded files to the file system and insert into database'''
-                    song_title=file_name
-                    with open(str("media/songs/"+str(song_title)+".mp3"), 'wb+') as destination:
-                        for chunk in a.chunks():
-                            destination.write(chunk)
-                    upload_url = "songs/"+str(song_title)+".mp3"
-                    new_song = Song(user = request.user, album = Album.objects.get(album_title=file_album_name), song_title = song_title, audio_file = upload_url)
-                    new_song.save()
-                addGivenAlbum(request,Album.objects.get(album_title=file_album_name).id)
-                      
+        
+            if not Song.objects.filter(album__album_title=file_album_name,song_title=file_name).exists():
+                '''save the uploaded files to the file system and insert into database'''
+                song_title=file_name
+                with open(str("media/songs/"+str(song_title)+".mp3"), 'wb+') as destination:
+                    for chunk in a.chunks():
+                        destination.write(chunk)
+                upload_url = "songs/"+str(song_title)+".mp3"
+                new_song = Song(user = request.user, album = Album.objects.get(album_title=file_album_name), song_title = song_title, audio_file = upload_url)
+                new_song.save()
+            addGivenAlbum(request,Album.objects.get(album_title=file_album_name).id)
+                    
         return JsonResponse({'success':True}) #redirects to the home page
     context = {
         'form': form,
