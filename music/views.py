@@ -70,7 +70,9 @@ def create_song(request):
                             destination.write(chunk)
                     upload_url = "songs/"+str(song_title)+".mp3"
                     new_song = Song(user = request.user, album = Album.objects.get(album_title=file_album_name), song_title = song_title, audio_file = upload_url)
-                    new_song.save()  
+                    new_song.save()
+                addGivenAlbum(request,Album.objects.get(album_title=file_album_name).id)
+                      
         return JsonResponse({'success':True}) #redirects to the home page
     context = {
         'form': form,
@@ -378,7 +380,6 @@ def users(request):
 def view_user(request,user_id):
     searchedUser = User.objects.get(id=user_id)
     albums = Album.objects.filter(id__in = UserAlbum.objects.filter(user=searchedUser).values_list('album__id',flat=True))
-    print albums
     songstoplay=[]
     for album in albums:
         for song in Song.objects.filter(album=album):
