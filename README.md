@@ -11,4 +11,7 @@ Your music always with you
  ```pip install -r requirements.txt```
 <br>
 <br>
+```python manage.py makemigrations```
+<br>
+<br>
  ```python manage.py runserver```
