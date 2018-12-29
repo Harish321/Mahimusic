@@ -1,4 +1,4 @@
-from serializers import AlbumSerializer,SongSerializer,SongUrlSerializer
+from .serializers import AlbumSerializer,SongSerializer,SongUrlSerializer
 from rest_framework import generics
 from music.models import Song,Album
 from rest_framework import viewsets

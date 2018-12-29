@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from views import AlbumsView,SongsView,AlbumView,SongsUrlView
+from .views import AlbumsView,SongsView,AlbumView,SongsUrlView
 urlpatterns = [
     url(r'^albums/$', AlbumsView.as_view(), name='albumsview'),
     url(r'^songs/(?P<album_id>[0-9]+)',SongsView.as_view(),name='songsview'),

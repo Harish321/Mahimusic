@@ -142,7 +142,7 @@ def index(request):
     albums = Album.objects.all()
     songstoplay = givesongsurl(Song.objects.all())
     context = {'albums': albums,'songstoplay': songstoplay,'searched':False}
-    if  request.user.is_authenticated():
+    if  request.user.is_authenticated:
         form = SongForm(request.POST or None, request.FILES or None)
         useralbums =  Album.objects.filter(id__in = UserAlbum.objects.filter(user=request.user).values_list('album',flat=True)).values_list('id',flat=True)
         context['form'] = form
